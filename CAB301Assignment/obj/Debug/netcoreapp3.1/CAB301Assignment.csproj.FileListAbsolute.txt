@@ -1,0 +1,13 @@
+C:\jscott\CAB301Assignment\CAB301Assignment\obj\Debug\netcoreapp3.1\CAB301Assignment.csprojAssemblyReference.cache
+C:\jscott\CAB301Assignment\CAB301Assignment\obj\Debug\netcoreapp3.1\CAB301Assignment.AssemblyInfoInputs.cache
+C:\jscott\CAB301Assignment\CAB301Assignment\obj\Debug\netcoreapp3.1\CAB301Assignment.AssemblyInfo.cs
+C:\jscott\CAB301Assignment\CAB301Assignment\obj\Debug\netcoreapp3.1\CAB301Assignment.csproj.CoreCompileInputs.cache
+C:\jscott\CAB301Assignment\CAB301Assignment\bin\Debug\netcoreapp3.1\CAB301Assignment.exe
+C:\jscott\CAB301Assignment\CAB301Assignment\bin\Debug\netcoreapp3.1\CAB301Assignment.deps.json
+C:\jscott\CAB301Assignment\CAB301Assignment\bin\Debug\netcoreapp3.1\CAB301Assignment.runtimeconfig.json
+C:\jscott\CAB301Assignment\CAB301Assignment\bin\Debug\netcoreapp3.1\CAB301Assignment.runtimeconfig.dev.json
+C:\jscott\CAB301Assignment\CAB301Assignment\bin\Debug\netcoreapp3.1\CAB301Assignment.dll
+C:\jscott\CAB301Assignment\CAB301Assignment\bin\Debug\netcoreapp3.1\CAB301Assignment.pdb
+C:\jscott\CAB301Assignment\CAB301Assignment\obj\Debug\netcoreapp3.1\CAB301Assignment.dll
+C:\jscott\CAB301Assignment\CAB301Assignment\obj\Debug\netcoreapp3.1\CAB301Assignment.pdb
+C:\jscott\CAB301Assignment\CAB301Assignment\obj\Debug\netcoreapp3.1\CAB301Assignment.genruntimeconfig.cache

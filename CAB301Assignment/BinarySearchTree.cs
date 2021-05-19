@@ -1,40 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CAB301Assignment
 {
-	public class BinarySearchNode
-	{
-		private Member member; // value
-		private BinarySearchNode lchild; // reference to its left child 
-		private BinarySearchNode rchild; // reference to its right child
-
-		public BinarySearchNode(Member member)
-		{
-			this.member = member;
-			lchild = null;
-			rchild = null;
-		}
-
-		public Member Member
-		{
-			get { return member; }
-			set { member = value; }
-		}
-
-		public BinarySearchNode LChild
-		{
-			get { return lchild; }
-			set { lchild = value; }
-		}
-
-		public BinarySearchNode RChild
-		{
-			get { return rchild; }
-			set { rchild = value; }
-		}
-	}
-
-
 	public class BinarySearchTree : iBinarySearchTree
 	{
 		private BinarySearchNode root;
@@ -79,21 +47,21 @@ namespace CAB301Assignment
 
 		// pre: ptr != null
 		// post: item is inserted to the binary search tree rooted at ptr
-		private void Insert(Member item, BinarySearchNode ptr)
+		private void Insert(Member member, BinarySearchNode ptr)
 		{
-			if (item.CompareTo(ptr.Member) < 0)
+			if (member.CompareTo(ptr.Member) < 0)
 			{
 				if (ptr.LChild == null)
-					ptr.LChild = new BinarySearchNode(item);
+					ptr.LChild = new BinarySearchNode(member);
 				else
-					Insert(item, ptr.LChild);
+					Insert(member, ptr.LChild);
 			}
 			else
 			{
 				if (ptr.RChild == null)
-					ptr.RChild = new BinarySearchNode(item);
+					ptr.RChild = new BinarySearchNode(member);
 				else
-					Insert(item, ptr.RChild);
+					Insert(member, ptr.RChild);
 			}
 		}
 
@@ -115,8 +83,7 @@ namespace CAB301Assignment
 					ptr = ptr.RChild;
 			}
 
-			if (ptr != null) // if the search was successful
-			{
+			if (ptr != null) {
 				// case 3: item has two children
 				if ((ptr.LChild != null) && (ptr.RChild != null))
 				{
@@ -162,59 +129,29 @@ namespace CAB301Assignment
 
 			}
 		}
-
-		public void PreOrderTraverse()
-		{
-			Console.Write("PreOrder: ");
-			PreOrderTraverse(root);
-			Console.WriteLine();
+		public Member[] InOrderTraverse() {
+			Member[] a;
+			List<Member> l = new List<Member>();
+			InOrderTraverse(root, l); 
+			a = new Member[l.Count];
+			for (int i = 0; i < l.Count; i++)
+			{
+				a[i] = l[i];
+			}
+			return a; 
 		}
 
-		private void PreOrderTraverse(BinarySearchNode root)
-		{
+		private void InOrderTraverse(BinarySearchNode root, List<Member> l) {
 			if (root != null)
 			{
-				Console.Write(root.Member);
-				PreOrderTraverse(root.LChild);
-				PreOrderTraverse(root.RChild);
+				InOrderTraverse(root.LChild, l);
+				l.Add(root.Member);
+				InOrderTraverse(root.RChild, l);
 			}
 		}
 
-		public void InOrderTraverse()
-		{
-			Console.Write("InOrder: ");
-			InOrderTraverse(root);
-			Console.WriteLine();
-		}
-
-		private void InOrderTraverse(BinarySearchNode root)
-		{
-			if (root != null)
-			{
-				InOrderTraverse(root.LChild);
-				Console.Write(root.Member);
-				InOrderTraverse(root.RChild);
-			}
-		}
-
-		public void PostOrderTraverse()
-		{
-			Console.Write("PostOrder: ");
-			PostOrderTraverse(root);
-			Console.WriteLine();
-		}
-		private void PostOrderTraverse(BinarySearchNode root)
-		{
-			if (root != null)
-			{
-				PostOrderTraverse(root.LChild);
-				PostOrderTraverse(root.RChild);
-				Console.Write(root.Member);
-			}
-		}
-		public void Clear()
-		{
+		public void Clear() {
 			root = null;
 		}
-	}
+    }
 }

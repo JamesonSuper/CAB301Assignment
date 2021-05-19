@@ -13,24 +13,22 @@ namespace CAB301Assignment
             members = new BinarySearchTree();
         }
 
-        public void add(Member aMember)
-        {
+        public void add(Member aMember) {
             members.Insert(aMember);
+            Number++;
         }
 
-        public void delete(Member aMember)
-        {
+        public void delete(Member aMember) {
             members.Delete(aMember);
+            Number--;
         }
 
-        public bool search(Member aMember)
-        {
+        public bool search(Member aMember) {
             return members.Search(aMember);
         }
 
-        public Member[] toArray()
-        {
-            throw new NotImplementedException();
+        public Member[] toArray() {
+            return members.InOrderTraverse();
         }
     }
 }

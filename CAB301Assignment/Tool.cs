@@ -14,12 +14,11 @@ namespace CAB301Assignment
         private int noBorrowings;
         private MemberCollection Borrowers;
 
-        public Tool(string name, int quantity, int availableQuantity, int noBorrowings)
-        {
+        public Tool(string name) {
             Name = name;
-            Quantity = quantity;
-            AvailableQuantity = availableQuantity;
-            NoBorrowings = noBorrowings;
+            Quantity = 1;
+            AvailableQuantity = 1;
+            NoBorrowings = 0;
             Borrowers = new MemberCollection();
         }
         public string Name { get { return name; } set { name = value; } }

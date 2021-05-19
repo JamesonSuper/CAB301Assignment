@@ -6,8 +6,7 @@ namespace CAB301Assignment
     {
         static void Main(string[] args)
         {
-            ToolLibrarySystem tls = new ToolLibrarySystem();
-                   
+            ToolLibrarySystem library = new ToolLibrarySystem();
             while (true)
             {
                 drawMainMenu();
@@ -26,20 +25,20 @@ namespace CAB301Assignment
                                         // Add a new tool
                                         Tool newtool = addToolMenu();
                                         if (newtool != null)
-                                            tls.add(newtool);
+                                            library.add(newtool);
                                         break;
                                     case "2":
                                         // Add new pieces of existing tool (Update quantity)
-                                        Console.WriteLine();
+                                        //library.add();
                                         break;
                                     case "3":
                                         // Remove some pieves of existing tool (Update quantity)
-                                        tls.delete(deleteToolMenu());
+                                        library.delete(deleteToolMenu());
                                         break;
                                     case "4": // Register a new member
                                         Member newMember = addMemberMenu();
                                         if (newMember != null)
-                                            tls.add(newMember);
+                                            library.add(newMember);
                                         break;
                                     case "5":
                                         // Remove a member

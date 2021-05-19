@@ -16,17 +16,6 @@ namespace CAB301Assignment
         private ToolCollection[] ElectronicTools;
         private ToolCollection[] ElectricityTools;
         private ToolCollection[] AutomotiveTools;
-        private string[] categories = {
-                "Gardening tools",
-                "Flooring Tools",
-                "Fencing Tools",
-                "Measuring Tools",
-                "Cleaning Tools",
-                "Painting Tools",
-                "Electronic Tools",
-                "Electricity Tools",
-                "Automotive Tools"
-            };
 
         public ToolLibrarySystem() {
             members = new MemberCollection();
@@ -69,7 +58,7 @@ namespace CAB301Assignment
         }
         public void add(Tool aTool) // add a new tool to the system 
         {
-            add(aTool, determineCategoryAndType());
+            add(aTool, determineToolCollection());
         }
         private void add(Tool aTool, ToolCollection toolCollection) // add a tool to a specified ToolCollection
         {
@@ -83,8 +72,7 @@ namespace CAB301Assignment
             throw new NotImplementedException();
         }
 
-        public void add(Member aMember)
-        {
+        public void add(Member aMember) {
             members.add(aMember);
             Console.WriteLine();
             Console.WriteLine("Success! New member created: " + aMember.FirstName + " " + aMember.LastName);
@@ -92,48 +80,56 @@ namespace CAB301Assignment
             Console.ReadKey();
         }
 
-        public void borrowTool(Member aMember, Tool aTool)
-        {
+        public void borrowTool(Member aMember, Tool aTool) {
             throw new NotImplementedException();
         }
 
-        public void delete(Tool aTool)
-        {
-            ToolCollection toolCollection = determineCategoryAndType();
-
-            Console.Write("\nPlease select a tool to delete.");
+        public void delete(Tool aTool) {
+            ToolCollection toolCollection = determineToolCollection();
+            
+            if (toolCollection.Number == 0) { 
+                Console.WriteLine("No tool exisits in that category type.");
+                Console.WriteLine("Press enter to return to staff menu.");
+                Console.ReadKey();
+                return;
+            }
+            Console.WriteLine("\nTools found in selected category and type:");
+            Console.WriteLine("===========================================");
             for (int i = 0; i < toolCollection.Number; i++)
             {
-                Console.WriteLine(i+1 + " - " + toolCollection.toArray()[i].Name);
+                Console.WriteLine("Tool No:\t\t" + (i+1));
+                Console.WriteLine("Name:\t\t\t" + toolCollection.toArray()[i].Name);
+                Console.WriteLine("Quantity:\t\t" + toolCollection.toArray()[i].Quantity);
+                Console.WriteLine("Available Quantity:\t" + toolCollection.toArray()[i].AvailableQuantity);
+                Console.WriteLine("No. Borrowings:\t\t" + toolCollection.toArray()[i].NoBorrowings);
+                Console.WriteLine("-------------------------------------------");
             }
-            Console.Write("Please choose an index for a tool to delete it - ");
-            string indexToDelete = Console.ReadLine();
-            try
-            {
+            Console.Write("Choose a tool to delete - ");
+            try {
+                int index = int.Parse(Console.ReadLine()) - 1;
+                if (index < 0 || index >= toolCollection.Number)
+                    throw new FormatException();
 
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Please enter a number.");
+                toolCollection.delete(toolCollection.toArray()[index]);
+                Console.WriteLine("Press enter to return to staff menu.");
+                Console.ReadKey();
+                return;
+            } catch (FormatException) {
+                Console.WriteLine("\nPlease enter a displayed Tool No.");
+                Console.WriteLine("Press enter to return to staff menu.");
+                Console.ReadKey();
                 return;
             }
         }
-        private void delete(Tool aTool, ToolCollection toolCollection)
-        {
-
-        }
-        public void delete(Tool aTool, int quantity)
-        {
+        public void delete(Tool aTool, int quantity) {
             throw new NotImplementedException();
         }
 
-        public void delete(Member aMember)
-        {
+        public void delete(Member aMember) {
             throw new NotImplementedException();
         }
 
-        public void displayBorrowingTools(Member aMember)
-        {
+        public void displayBorrowingTools(Member aMember) {
             throw new NotImplementedException();
         }
 
@@ -157,7 +153,7 @@ namespace CAB301Assignment
             throw new NotImplementedException();
         }
 
-        private ToolCollection determineCategoryAndType()
+        private ToolCollection determineToolCollection()
         {
             Console.WriteLine("Please select the Tool Category");
             Console.WriteLine("===============================");
@@ -199,7 +195,7 @@ namespace CAB301Assignment
                     catch (FormatException)
                     {
                         Console.WriteLine("Please enter a valid menu opton as a number.");
-                        return determineCategoryAndType();
+                        return determineToolCollection();
                     }
 
                 case "2":
@@ -223,7 +219,7 @@ namespace CAB301Assignment
                     catch (FormatException)
                     {
                         Console.WriteLine("Please enter a valid menu opton as a number.");
-                        return determineCategoryAndType();
+                        return determineToolCollection();
                     }
                 case "3":
                     Console.WriteLine("1 - Hand Tools");
@@ -245,7 +241,7 @@ namespace CAB301Assignment
                     catch (FormatException)
                     {
                         Console.WriteLine("Please enter a valid menu opton as a number.");
-                        return determineCategoryAndType();
+                        return determineToolCollection();
                     }
                 case "4":
                     Console.WriteLine("1 - Distance Tools");
@@ -268,7 +264,7 @@ namespace CAB301Assignment
                     catch (FormatException)
                     {
                         Console.WriteLine("Please enter a valid menu opton as a number.");
-                        return determineCategoryAndType();
+                        return determineToolCollection();
                     }
                 case "5":
                     Console.WriteLine("1 - Draining");
@@ -291,7 +287,7 @@ namespace CAB301Assignment
                     catch (FormatException)
                     {
                         Console.WriteLine("Please enter a valid menu opton as a number.");
-                        return determineCategoryAndType();
+                        return determineToolCollection();
                     }
                 case "6":
                     Console.WriteLine("1 - Sanding Tools");
@@ -315,7 +311,7 @@ namespace CAB301Assignment
                     catch (FormatException)
                     {
                         Console.WriteLine("Please enter a valid menu opton as a number.");
-                        return determineCategoryAndType();
+                        return determineToolCollection();
                     }
                 case "7":
                     Console.WriteLine("1 - Voltage Tester");
@@ -338,7 +334,7 @@ namespace CAB301Assignment
                     catch (FormatException)
                     {
                         Console.WriteLine("Please enter a valid menu opton as a number.");
-                        return determineCategoryAndType();
+                        return determineToolCollection();
                     }
                 case "8":
                     Console.WriteLine("1 - Test Equipment");
@@ -360,8 +356,8 @@ namespace CAB301Assignment
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("Please enter a valid menu opton as a number.");
-                        return determineCategoryAndType();
+                        Console.WriteLine("Please enter a valid menu opton as a number.\n\n");
+                        return determineToolCollection();
                     }
                 case "9":
                     Console.WriteLine("1 - Jacks");
@@ -384,7 +380,7 @@ namespace CAB301Assignment
                     catch (FormatException)
                     {
                         Console.WriteLine("Please enter a valid menu opton as a number.");
-                        return determineCategoryAndType();
+                        return determineToolCollection();
                     }
                 case "0":
                     return null;
@@ -392,7 +388,8 @@ namespace CAB301Assignment
                     Console.WriteLine("Please enter a valid menu option.");
                     Console.WriteLine("Press enter to try again.");
                     Console.ReadKey();
-                    return determineCategoryAndType();
+                    Console.Clear();
+                    return determineToolCollection();
             }
         }
     }

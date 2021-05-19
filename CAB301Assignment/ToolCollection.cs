@@ -41,11 +41,11 @@ namespace CAB301Assignment
             return false;
         }
         public Tool[] toArray() {
-            Tool[] nonEmptyCollection = new Tool[Number];
+            Tool[] arr = new Tool[Number];
             for (int i = 0; i < Number; i++) {
-                nonEmptyCollection[i] = collection[i];
+                arr[i] = collection[i];
             }
-            return nonEmptyCollection;
+            return arr;
         }
     }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using CAB301Assignment;
+using Assignment;
 
-namespace CAB301Assignment
+namespace Assignment
 {
     public class Tool : iTool, IComparable<Tool>
     {

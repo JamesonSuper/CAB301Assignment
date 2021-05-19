@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CAB301Assignment
+namespace Assignment
 {
 	public class BinarySearchTree : iBinarySearchTree
 	{

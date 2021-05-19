@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CAB301Assignment
+namespace Assignment
 {
     //The specification of Tool ADT
     interface iTool

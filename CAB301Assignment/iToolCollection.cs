@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CAB301Assignment
+namespace Assignment
 {
     //The specification of ToolCollection ADT, which is used to store and manipulate a collection of tools
     interface iToolCollection

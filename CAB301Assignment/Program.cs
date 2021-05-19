@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CAB301Assignment
+namespace Assignment
 {
     class Program
     {
@@ -29,20 +29,22 @@ namespace CAB301Assignment
                                         break;
                                     case "2":
                                         // Add new pieces of existing tool (Update quantity)
-                                        //library.add();
+
+                                        //library.add(null, null);
                                         break;
                                     case "3":
                                         // Remove some pieves of existing tool (Update quantity)
                                         library.delete(deleteToolMenu());
                                         break;
-                                    case "4": // Register a new member
+                                    case "4": 
+                                        // Register a new member
                                         Member newMember = addMemberMenu();
                                         if (newMember != null)
                                             library.add(newMember);
                                         break;
                                     case "5":
                                         // Remove a member
-                                        Console.WriteLine();
+                                        library.delete(deleteMemberMenu());
 
                                         break;
                                     case "6":
@@ -68,11 +70,9 @@ namespace CAB301Assignment
                         }
                         break;
                     case "2":
-                        if (memberAuthenticated())
-                        {
+                        if (memberAuthenticated()) {
                             drawMemberMenu();
-                            switch (Console.ReadLine())
-                            {
+                            switch (Console.ReadLine()) {
                                 case "1":
                                     // Display Tools by Category
                                     break;
@@ -93,8 +93,7 @@ namespace CAB301Assignment
                                     break;
                             }
                         }
-                        else
-                        {
+                        else {
                             Console.Clear();
                             Console.WriteLine("No member exists with the provided details. Please try again.");
                             Console.ReadKey();
@@ -197,9 +196,14 @@ namespace CAB301Assignment
                 return addMemberMenu();
             }
         }
+        static Member deleteMemberMenu() {
+            Console.Clear();
+            Console.WriteLine("Tool Library System - Delete a member");
+            Console.WriteLine("======================================\n");
+            return null;
+        }
 
-        static void drawMemberMenu()
-        {
+        static void drawMemberMenu() {
             Console.Clear();
             Console.WriteLine("Welcome to the Tool Library\n");
             Console.WriteLine("===============Member Menu===============");
@@ -211,8 +215,7 @@ namespace CAB301Assignment
             Console.WriteLine("0. Return to main menu");
             Console.WriteLine("=========================================");
         }
-        static bool memberAuthenticated()
-        {
+        static bool memberAuthenticated() {
             Console.Clear();
             Console.WriteLine("   Tool Library System - Member Login Page   ");
             Console.WriteLine("=============================================");
@@ -220,7 +223,11 @@ namespace CAB301Assignment
             string memberID = Console.ReadLine();
             Console.Write("Please enter your 4 digit PIN - ");
             string PIN = Console.ReadLine();
+
             //Check against membercollection for existing member with pin
+            //for (int i = 0; i < members.toArray().Length(); i++) {
+
+            //}
             return true;
         }
     }

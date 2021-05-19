@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CAB301Assignment
+namespace Assignment
 {
     public class ToolLibrarySystem : iToolLibrarySystem
     {
@@ -63,10 +63,14 @@ namespace CAB301Assignment
         private void add(Tool aTool, ToolCollection toolCollection) // add a tool to a specified ToolCollection
         {
             if (toolCollection != null) {
+                if (toolCollection.search(aTool)) {
+                    Console.WriteLine(aTool.ToString + "already exists in this Category.");
+                    Console.Write("Please enter a new );
+                }
                 toolCollection.add(aTool);
                 Console.WriteLine("Success! " + aTool.Name + " added to the system.");
             }
-        }
+        }   
         public void add(Tool aTool, int quantity) //add new pieces of an existing tool to the system
         {
             throw new NotImplementedException();
@@ -86,24 +90,11 @@ namespace CAB301Assignment
 
         public void delete(Tool aTool) {
             ToolCollection toolCollection = determineToolCollection();
-            
-            if (toolCollection.Number == 0) { 
-                Console.WriteLine("No tool exisits in that category type.");
-                Console.WriteLine("Press enter to return to staff menu.");
-                Console.ReadKey();
+
+            // If toolCollection is null, printTools will return false
+            if (!printTools(toolCollection))
                 return;
-            }
-            Console.WriteLine("\nTools found in selected category and type:");
-            Console.WriteLine("===========================================");
-            for (int i = 0; i < toolCollection.Number; i++)
-            {
-                Console.WriteLine("Tool No:\t\t" + (i+1));
-                Console.WriteLine("Name:\t\t\t" + toolCollection.toArray()[i].Name);
-                Console.WriteLine("Quantity:\t\t" + toolCollection.toArray()[i].Quantity);
-                Console.WriteLine("Available Quantity:\t" + toolCollection.toArray()[i].AvailableQuantity);
-                Console.WriteLine("No. Borrowings:\t\t" + toolCollection.toArray()[i].NoBorrowings);
-                Console.WriteLine("-------------------------------------------");
-            }
+            
             Console.Write("Choose a tool to delete - ");
             try {
                 int index = int.Parse(Console.ReadLine()) - 1;
@@ -391,6 +382,27 @@ namespace CAB301Assignment
                     Console.Clear();
                     return determineToolCollection();
             }
+        }
+        private bool printTools(ToolCollection toolCollection) {
+            if (toolCollection.Number == 0)
+            {
+                Console.WriteLine("No tool exisits in that category type.");
+                Console.WriteLine("Press enter to return to staff menu.");
+                Console.ReadKey();
+                return false;
+            }
+            Console.WriteLine("\nTools found in selected category and type:");
+            Console.WriteLine("===========================================");
+            for (int i = 0; i < toolCollection.Number; i++)
+            {
+                Console.WriteLine("Tool No:\t\t" + (i + 1));
+                Console.WriteLine("Name:\t\t\t" + toolCollection.toArray()[i].Name);
+                Console.WriteLine("Quantity:\t\t" + toolCollection.toArray()[i].Quantity);
+                Console.WriteLine("Available Quantity:\t" + toolCollection.toArray()[i].AvailableQuantity);
+                Console.WriteLine("No. Borrowings:\t\t" + toolColtoolCollection.toArray()[i]lection.NoBorrowings);
+                Console.WriteLine("-------------------------------------------");
+            }
+            return true;
         }
     }
 }

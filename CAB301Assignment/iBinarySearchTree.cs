@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CAB301Assignment
+namespace Assignment
 {
 	public interface iBinarySearchTree
 	{

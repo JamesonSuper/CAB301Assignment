@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CAB301Assignment;
+using Assignment;
 
-namespace CAB301Assignment
+namespace Assignment
 {
     interface iToolLibrarySystem
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-namespace CAB301Assignment
+namespace Assignment
 {
     public class Member : iMember, IComparable<Member> {
         private string firstName;

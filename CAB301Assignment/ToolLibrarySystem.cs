@@ -16,7 +16,6 @@ namespace Assignment
         private ToolCollection[] ElectronicTools;
         private ToolCollection[] ElectricityTools;
         private ToolCollection[] AutomotiveTools;
-        private Member loggedInMember;
 
         public ToolLibrarySystem() {
             members = new MemberCollection();
@@ -180,26 +179,7 @@ namespace Assignment
             }
         }
         public void delete(Member aMember) {
-            if (!printAllMembers(members))
-                return;
-            Console.Write("Please choose member for deletion by number only - ");
-            try {
-                // Checking to see if selected user has any borrowed tools.
-                if (members.toArray()[int.Parse(Console.ReadLine()) - 1].Tools.Length == 0)
-                {
-                    members.delete(members.toArray()[int.Parse(Console.ReadLine()) - 1]);
-                    Console.WriteLine("Success! See new list of members below.");
-                    printAllMembers(members);
-                } else {
-                    Console.WriteLine("That user currently has tools borrowed and cannot be deleted.");
-                    Console.WriteLine("Press enter to return to staff menu");
-                    Console.ReadKey();
-                }
-            } catch (Exception) {
-                Console.WriteLine("Not a valid choice.");
-                Console.WriteLine("Press enter to return to staff menu");
-                Console.ReadKey();
-            }
+            members.delete(aMember);
         }
         public void displayBorrowingTools(Member aMember) {
             throw new NotImplementedException();
@@ -220,20 +200,37 @@ namespace Assignment
                 return null;
             Console.Write("Please choose member to see their borrowed tools - ");
             try {
-                int memberIndex = int.Parse(Console.ReadLine()) - 1;
-                if (members.toArray()[memberIndex].Tools.Length == 0) {
+                Member memberToCheck = members.toArray()[int.Parse(Console.ReadLine()) - 1];
+                int toolCount = 0;
+                memberToCheck.addTool(new Tool("Ninja 10BillION"));
+                memberToCheck.addTool(new Tool("Ninja 10BillION"));
+                memberToCheck.addTool(new Tool("Ninja 10BillION"));
+                memberToCheck.deleteTool(new Tool("Ninja 10BillION"));
+                memberToCheck.deleteTool(new Tool("Ninja 10BillION"));
+
+                // Checking to see if the member has any tools.
+                for (int i = 0; i < memberToCheck.Tools.Length; i++)
+                {
+                    if (memberToCheck.Tools[i] != null)
+                        toolCount++;
+                }
+                // If not, do not display tool data and exit function.
+                if (toolCount == 0) {
                     Console.WriteLine("This member does not have any borrowed tools.");
                     Console.WriteLine("Press enter to return to staff menu");
                     Console.ReadKey();
                     return null;
                 }
                 else {
-                    Console.WriteLine("Members borrowed tools");
-                    Console.WriteLine("----------------------");
-                    Console.WriteLine(members.toArray()[memberIndex].ToString());
-                    for (int i = 0; i < members.toArray()[memberIndex].Tools.Length; i++) {
-                        Console.WriteLine(i + ":\t" + members.toArray()[memberIndex].Tools[i].ToString());
+                    Console.WriteLine("\n");
+                    Console.WriteLine(memberToCheck.ToString() + ": Borrowed Tools");
+                    Console.WriteLine("--------------------------------------");
+                    for (int i = 0; i < memberToCheck.Tools.Length; i++) {
+                        if (memberToCheck.Tools[i] == null) continue;
+                        Console.WriteLine(i + ":\t" + memberToCheck.Tools[i]);
                     }
+                    Console.WriteLine("Press enter to return to staff menu");
+                    Console.ReadKey();
                     return null;
                 }
             } catch (Exception) {

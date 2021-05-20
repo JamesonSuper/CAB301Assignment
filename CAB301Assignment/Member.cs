@@ -26,7 +26,8 @@ namespace Assignment
         public string PIN { get { return pIN; } set { pIN = value; } }
 
         public void addTool(Tool aTool) {
-            for (int i = 0; i < tools.Length; i++) {
+            for (int i = 0; i < tools.Length; i++) 
+            {
                 if (tools[i] == null) {
                     tools[i] = aTool.ToString();
                     return;
@@ -36,7 +37,8 @@ namespace Assignment
         }
 
         public void deleteTool(Tool aTool) {
-            for (int i = 0; i < tools.Length; i++) {
+            for (int i = 0; i < tools.Length; i++)
+            {
                 if (tools[i] == aTool.ToString()) {
                     tools[i] = null;
                     return;

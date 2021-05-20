@@ -45,16 +45,12 @@ namespace Assignment
                                         break;
                                     case "4": 
                                         // Register a new member
-                                        Member newMember = addMemberMenu();
-                                        if (newMember != null)
-                                        {
-                                            library.add(newMember);
-                                            members.add(newMember);
-                                        }
+                                        addMemberMenu(members, library);
                                         break;
                                     case "5":
                                         // Remove a member
-                                        library.delete(deleteMemberMenu());                                        break;
+                                        deleteMemberMenu(members, library);
+                                        break;
                                     case "6":
                                         Console.WriteLine("Show tools a member has on loan");
                                         Console.WriteLine("===============================");
@@ -78,38 +74,40 @@ namespace Assignment
                         }
                         break;
                     case "2":
-                        if (true) {
-                        //if (memberAuthenticated()) {
+                       
+                        if (memberAuthenticated(members)) {
                             bool memberLoggedIn = true;
-                            drawMemberMenu();
-                            string menuInput = Console.ReadLine();
-                            Console.Clear();
-                            switch (menuInput) {
-                                case "1":
-                                    // Display Tools by Category
-                                    library.displayTools(null);
-                                    break;
-                                case "2":
-                                    // Borrow Tool from the library
-                                    library.borrowTool(null, null);
-                                    break;
-                                case "3":
-                                    // Return Tool to the library
-                                    break;
-                                case "4":
-                                    // List tools on loan
-                                    break;
-                                case "5":
-                                    // Most frequently borrowed
-                                    break;
-                                case "0":
-                                    memberLoggedIn = false;
-                                    break;
-                                default:
-                                    Console.Clear();
-                                    Console.WriteLine("Please enter a valid menu option");
-                                    Console.ReadKey();
-                                    break;
+                            while(memberLoggedIn) { 
+                                drawMemberMenu();
+                                string menuInput = Console.ReadLine();
+                                Console.Clear();
+                                switch (menuInput) {
+                                    case "1":
+                                        // Display Tools by Category
+                                        library.displayTools(null);
+                                        break;
+                                    case "2":
+                                        // Borrow Tool from the library
+                                        library.borrowTool(null, null);
+                                        break;
+                                    case "3":
+                                        // Return Tool to the library
+                                        break;
+                                    case "4":
+                                        // List tools on loan
+                                        break;
+                                    case "5":
+                                        // Most frequently borrowed
+                                        break;
+                                    case "0":
+                                        memberLoggedIn = false;
+                                        break;
+                                    default:
+                                        Console.Clear();
+                                        Console.WriteLine("Please enter a valid menu option");
+                                        Console.ReadKey();
+                                        break;
+                                }
                             }
                         }
                         else {
@@ -196,59 +194,98 @@ namespace Assignment
             return new Tool("!Tool");
         }
         
-        static Member addMemberMenu() {
+        static void addMemberMenu(MemberCollection members, ToolLibrarySystem library) {
             Console.Clear();
             Console.WriteLine("Tool Library System - Add a new member");
             Console.WriteLine("======================================\n");
+
             Console.Write("Please enter the new members first name (0 to exit) - ");
             string FirstName = Console.ReadLine();
             if (FirstName == "0")
-                return null;
+                return;
             if (FirstName == "")
             {
-                Console.WriteLine("ERROR: First Name name must not be null.");
-                return addMemberMenu();
+                badInputHandler("ERROR: First Name name must not be null.");
+                return;
             }
+
             Console.Write("Please enter the new members last name (0 to exit) - ");
             string LastName = Console.ReadLine();
             if (LastName == "0")
-                return null;
+                return;
             if (LastName == "")
             {
-                Console.WriteLine("ERROR: Last Name name must not be null.");
-                return addMemberMenu();
+                badInputHandler("ERROR: Last Name name must not be null.");
+                return;
             }
+
             Console.Write("Please enter the new members contact number (0 to exit) - ");
             string ContactNumber = Console.ReadLine();
             if (ContactNumber == "0")
-                return null;
+                return;
+            if (ContactNumber == "")
+            {
+                badInputHandler("ERROR: contact number name must not be null.");
+                return;
+            }
+
             Console.Write("Please enter the new members 4 digit PIN (0 to exit) - ");
             string PIN = Console.ReadLine(); 
             if (PIN == "0")
-                return null;
+                return;
             else if (PIN.Length == 4)
                 try {
                     int.Parse(PIN);
-                    return (new Member(FirstName, LastName, ContactNumber, PIN));
+                    library.add(new Member(FirstName, LastName, ContactNumber, PIN));
+                    members.add(new Member(FirstName, LastName, ContactNumber, PIN));
                 } catch (FormatException) {
-                    Console.WriteLine("PIN must be 4 digits.");
-                    return addMemberMenu();
+                    badInputHandler("PIN must be positive integers.");
+                    return;
                 }
             else {
-                Console.WriteLine("Please ensure the PIN is 4 digits long.");
-                return addMemberMenu();
+                badInputHandler("Please ensure the PIN is 4 digits long.");
+                return;
             }
         }
-        static Member deleteMemberMenu() {
+        static void deleteMemberMenu(MemberCollection members, ToolLibrarySystem library)
+        {
             Console.Clear();
-            Console.WriteLine("Tool Library System - Delete a member");
-            Console.WriteLine("=====================================\n");
-            return null;
+            Console.WriteLine("Delete a member");
+            Console.WriteLine("===============\n");
+            if (!printAllMembers(members))
+            {
+                Console.WriteLine("No registered members exist in the system");
+                return;
+            }
+            Console.Write("Please choose member for deletion by number only - ");
+            try
+            {
+                Member memberToDelete = members.toArray()[int.Parse(Console.ReadLine()) - 1];
+                // Checking to see if selected user has any borrowed tools.
+                if (memberToDelete.Tools.Length == 0)
+                {
+                    members.delete(memberToDelete);
+                    library.delete(memberToDelete);
+                    Console.WriteLine("Success! See new list of members below.");
+                    printAllMembers(members);
+                }
+                else
+                {
+                    Console.WriteLine("That user currently has tools borrowed and cannot be deleted.");
+                    Console.WriteLine("Press enter to return to staff menu");
+                    Console.ReadKey();
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Not a valid choice.");
+                Console.WriteLine("Press enter to return to staff menu");
+                Console.ReadKey();
+            }
         }
-
         static void drawMemberMenu() {
             Console.Clear();
-            Console.WriteLine("    Welcome to the Tool Library    \n");
+            Console.WriteLine("       Welcome to the Tool Library       ");
             Console.WriteLine("===============Member Menu===============");
             Console.WriteLine("1. Display all the tools of a tool type");
             Console.WriteLine("2. Borrow a tool");
@@ -259,21 +296,49 @@ namespace Assignment
             Console.WriteLine("=========================================");
             Console.Write("Enter Option: ");
         }
-        static bool memberAuthenticated() {
+        static bool memberAuthenticated(MemberCollection members) {
             Console.Clear();
             Console.WriteLine("   Tool Library System - Member Login Page   ");
             Console.WriteLine("=============================================");
             Console.Write("Please enter your member login ID - ");
-            string memberID = Console.ReadLine();
+            string username = Console.ReadLine();
             Console.Write("Please enter your 4 digit PIN - ");
             string PIN = Console.ReadLine();
-            //loggedInMember = new Member();
-            return true;
+            for (int i = 0; i < members.Number; i++)
+            {
+                string usernameToCompare = members.toArray()[i].LastName + members.toArray()[i].FirstName;
+                if (usernameToCompare == username)
+                    if (members.toArray()[i].PIN == PIN)
+                        return true;
+            }
+            return false;
         }
         static void badInputHandler(string message) {
             Console.WriteLine(message);
             Console.WriteLine("Press enter to try again.");
             Console.ReadKey();
+        }
+        static bool printAllMembers(MemberCollection members)
+        {
+            if (members.Number > 0)
+            {
+                Console.WriteLine("Current Members");
+                Console.WriteLine("=========================");
+                for (int i = 0; i < members.Number; i++)
+                {
+                    Console.WriteLine("Member No. " + (i + 1));
+                    Console.WriteLine("FirstName:\t" + members.toArray()[i].FirstName);
+                    Console.WriteLine("LastName:\t" + members.toArray()[i].LastName);
+                    Console.WriteLine("ContactNumber:\t" + members.toArray()[i].ContactNumber);
+                    Console.WriteLine("-------------------------");
+                }
+                return true;
+            }
+            else
+            {
+                badInputHandler("There are currently no registered members.");
+                return false;
+            }
         }
     }
 }

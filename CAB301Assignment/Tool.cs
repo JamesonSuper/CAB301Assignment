@@ -14,10 +14,10 @@ namespace Assignment
         private int noBorrowings;
         private MemberCollection Borrowers;
 
-        public Tool(string name) {
+        public Tool(string name, int quantity = 1) {
             Name = name;
-            Quantity = 1;
-            AvailableQuantity = 1;
+            Quantity = quantity;
+            AvailableQuantity = quantity;
             NoBorrowings = 0;
             Borrowers = new MemberCollection();
         }

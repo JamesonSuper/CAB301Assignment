@@ -13,7 +13,8 @@ namespace Assignment
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        if (staffAuthentication())
+                        //if (staffAuthentication())
+                        if (true)
                         {
                             bool staffLoggedIn = true;
                             while (staffLoggedIn)
@@ -29,12 +30,11 @@ namespace Assignment
                                         break;
                                     case "2":
                                         // Add new pieces of existing tool (Update quantity)
-
-                                        //library.add(null, null);
+                                        library.add(null, 1);
                                         break;
                                     case "3":
                                         // Remove some pieves of existing tool (Update quantity)
-                                        library.delete(deleteToolMenu());
+                                        library.delete(null, 0);
                                         break;
                                     case "4": 
                                         // Register a new member
@@ -45,11 +45,10 @@ namespace Assignment
                                     case "5":
                                         // Remove a member
                                         library.delete(deleteMemberMenu());
-
+                                            
                                         break;
                                     case "6":
-                                        // Show tools member has on loan
-                                        Console.WriteLine();
+                                        library.listTools(null);
                                         break;
                                     case "0":
                                         staffLoggedIn = false;
@@ -71,6 +70,7 @@ namespace Assignment
                         break;
                     case "2":
                         if (memberAuthenticated()) {
+                            bool memberLoggedIn = true;
                             drawMemberMenu();
                             switch (Console.ReadLine()) {
                                 case "1":
@@ -89,7 +89,12 @@ namespace Assignment
                                     // Most frequently borrowed
                                     break;
                                 case "0":
-                                    // Return to main menu
+                                    memberLoggedIn = false;
+                                    break;
+                                default:
+                                    Console.Clear();
+                                    Console.WriteLine("Please enter a valid menu option");
+                                    Console.ReadKey();
                                     break;
                             }
                         }
@@ -137,8 +142,7 @@ namespace Assignment
             Console.WriteLine("========================================");
             Console.Write("Enter Option: ");
         }
-        static bool staffAuthentication()
-        {
+        static bool staffAuthentication() {
             Console.Clear();
             Console.Write("Enter staff login: ");
             string username = Console.ReadLine();
@@ -147,7 +151,7 @@ namespace Assignment
             return (username == "staff" && password == "today123");
         }
 
-        static Tool addToolMenu(){
+        static Tool addToolMenu() {
             Console.Clear();
             Console.WriteLine("Tool Library System - Add a new Tool");
             Console.WriteLine("====================================\n");
@@ -156,18 +160,28 @@ namespace Assignment
             string name = Console.ReadLine();
             if (name == "0")
                 return null;
-            return new Tool(name);
+            Console.Write("Please enter the new Tools Quantity - ");
+            try {
+                int quantity = int.Parse(Console.ReadLine());
+                if (quantity < 1)
+                    throw new FormatException();
+                return new Tool(name, quantity);
+            } catch (FormatException) {
+                Console.WriteLine("ERROR: Input must be an positive integer");
+                Console.WriteLine("Press enter to return to staff menu.");
+                Console.ReadKey();
+                return null;
+            }
         }
-        static Tool deleteToolMenu()
-        {
+
+        static Tool deleteToolMenu() {
             Console.Clear();
             Console.WriteLine("Tool Library System - Delete an existing Tool");
             Console.WriteLine("=============================================\n");
             return new Tool("!Tool");
         }
         
-        static Member addMemberMenu()
-        {
+        static Member addMemberMenu() {
             Console.Clear();
             Console.WriteLine("Tool Library System - Add a new member");
             Console.WriteLine("======================================\n");
@@ -199,7 +213,7 @@ namespace Assignment
         static Member deleteMemberMenu() {
             Console.Clear();
             Console.WriteLine("Tool Library System - Delete a member");
-            Console.WriteLine("======================================\n");
+            Console.WriteLine("=====================================\n");
             return null;
         }
 
@@ -222,12 +236,8 @@ namespace Assignment
             Console.Write("Please enter your member login ID - ");
             string memberID = Console.ReadLine();
             Console.Write("Please enter your 4 digit PIN - ");
+
             string PIN = Console.ReadLine();
-
-            //Check against membercollection for existing member with pin
-            //for (int i = 0; i < members.toArray().Length(); i++) {
-
-            //}
             return true;
         }
     }

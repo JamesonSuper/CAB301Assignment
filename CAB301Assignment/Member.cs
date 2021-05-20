@@ -26,11 +26,23 @@ namespace Assignment
         public string PIN { get { return pIN; } set { pIN = value; } }
 
         public void addTool(Tool aTool) {
-            throw new NotImplementedException();
+            for (int i = 0; i < tools.Length; i++) {
+                if (tools[i] == null) {
+                    tools[i] = aTool.ToString();
+                    return;
+                }
+            }
+            throw new FormatException("This user already has 3 tools borrowed.");
         }
 
         public void deleteTool(Tool aTool) {
-            throw new NotImplementedException();
+            for (int i = 0; i < tools.Length; i++) {
+                if (tools[i] == aTool.ToString()) {
+                    tools[i] = null;
+                    return;
+                }
+            }
+            throw new FormatException("Tool not present in library");
         }
         public override string ToString() {
             return firstName + " " + lastName;

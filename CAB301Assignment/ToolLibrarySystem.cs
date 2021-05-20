@@ -58,24 +58,67 @@ namespace Assignment
         }
         public void add(Tool aTool) // add a new tool to the system 
         {
-            add(aTool, determineToolCollection());
-        }
-        private void add(Tool aTool, ToolCollection toolCollection) // add a tool to a specified ToolCollection
-        {
-            if (toolCollection != null) {
+            Console.WriteLine();
+            ToolCollection toolCollection = determineToolCollection();
+            if (toolCollection != null)
+            {       //If the tool already exists in the category, ask for updated quantity
                 if (toolCollection.search(aTool)) {
-                    Console.WriteLine(aTool.ToString + "already exists in this Category.");
-                    Console.Write("Please enter a new );
+                    Console.WriteLine(aTool.ToString() + " already exists in this Category.");
+                    Console.Write("Please specifiy how many " + aTool.Name + " are being added - ");
+                    try {
+                        int addedQuantity = int.Parse(Console.ReadLine());
+                        toolCollection.toArray()[findToolIndex(aTool, toolCollection)].Quantity += addedQuantity;
+                        toolCollection.toArray()[findToolIndex(aTool, toolCollection)].AvailableQuantity += addedQuantity;
+                    }
+                    catch (FormatException) {
+                        Console.WriteLine("Please enter a valid quantity");
+                        Console.WriteLine("Press enter to return to staff menu.");
+                        Console.ReadKey();
+                    }
                 }
-                toolCollection.add(aTool);
-                Console.WriteLine("Success! " + aTool.Name + " added to the system.");
+                else{
+                    toolCollection.add(aTool);
+                }
+                Console.WriteLine("\nSuccess! Tool added to the system.");
+                printTools(toolCollection);
+                Console.WriteLine("Press enter to return to staff menu.");
+                Console.ReadKey();
             }
-        }   
+        }
         public void add(Tool aTool, int quantity) //add new pieces of an existing tool to the system
         {
-            throw new NotImplementedException();
-        }
+            ToolCollection toolCollection = determineToolCollection();
+            if (toolCollection != null)
+            {      // List all tools in this category
+                if (!printTools(toolCollection))
+                    return;
+                Console.Write("Choose a tool to increase its quantity - ");
+                try {
+                    int index = int.Parse(Console.ReadLine()) - 1;
+                    if (index < 0 || index >= toolCollection.Number)
+                        throw new FormatException("No tool at that index");
 
+                    Console.Write("\nPlease enter amount to be added - ");
+                    int amountAdding = int.Parse(Console.ReadLine());
+                    toolCollection.toArray()[index].Quantity += amountAdding;
+                    toolCollection.toArray()[index].AvailableQuantity += amountAdding;
+                    Console.WriteLine("\nSuccess, updated tool details below.");
+                    printTool(toolCollection.toArray()[index]);
+                    Console.WriteLine("Press enter to return to staff menu.");
+                    Console.ReadKey();
+                }
+                catch (FormatException e)
+                {
+                    if (e.Message == "No tool at that index")
+                        Console.WriteLine(e.Message);
+                    else
+                        Console.WriteLine("\nPlease only enter numeric values.");
+                    Console.WriteLine("Press enter to return to staff menu.");
+                    Console.ReadKey();
+                    return;
+                }
+            }
+        }
         public void add(Member aMember) {
             members.add(aMember);
             Console.WriteLine();
@@ -88,38 +131,79 @@ namespace Assignment
             throw new NotImplementedException();
         }
 
-        public void delete(Tool aTool) {
+        public void delete(Tool aTool) // DELETE TOOL FROM COLLECTION
+        {
+            
+        }
+        public void delete(Tool aTool, int quantity) // REDUCE TOOL QUANTITY
+        {
+            // Prompts the user to choose a category and type, then returns that toolcollection
             ToolCollection toolCollection = determineToolCollection();
 
             // If toolCollection is null, printTools will return false
             if (!printTools(toolCollection))
                 return;
-            
-            Console.Write("Choose a tool to delete - ");
-            try {
+
+            Console.Write("Choose a tool to reduce quantity - ");
+            try
+            {
                 int index = int.Parse(Console.ReadLine()) - 1;
                 if (index < 0 || index >= toolCollection.Number)
-                    throw new FormatException();
-
-                toolCollection.delete(toolCollection.toArray()[index]);
-                Console.WriteLine("Press enter to return to staff menu.");
-                Console.ReadKey();
-                return;
-            } catch (FormatException) {
-                Console.WriteLine("\nPlease enter a displayed Tool No.");
+                    throw new FormatException("No tool at that index");
+                bool deleting = true;
+                while (deleting)
+                {
+                    Console.Write("\nPlease enter amount to be removed - ");
+                    int amountRemoving = int.Parse(Console.ReadLine());
+                    if (toolCollection.toArray()[index].Quantity - amountRemoving < 1) {
+                        Console.WriteLine("Tools cannot be completely removed from the library");
+                        Console.WriteLine("Please ensure remaining quantity remains above 0.");
+                    }
+                    else {
+                        toolCollection.toArray()[index].Quantity -= amountRemoving;
+                        toolCollection.toArray()[index].AvailableQuantity -= amountRemoving;
+                        Console.WriteLine("\nSuccess, updated tool details below.");
+                        printTool(toolCollection.toArray()[index]);
+                        Console.WriteLine("Press enter to return to staff menu.");
+                        Console.ReadKey();
+                        deleting = false;
+                    }
+                }
+            } catch (FormatException e) {
+                if (e.Message == "No tool at that index")
+                    Console.WriteLine(e.Message);
+                else
+                    Console.WriteLine("\nPlease only enter numeric values.");
                 Console.WriteLine("Press enter to return to staff menu.");
                 Console.ReadKey();
                 return;
             }
         }
-        public void delete(Tool aTool, int quantity) {
-            throw new NotImplementedException();
-        }
 
         public void delete(Member aMember) {
-            throw new NotImplementedException();
-        }
+            members.add(new Member("James", "Scott", "04310244027", "9711")); 
+            if (!printAllMembers(members))
+                return;
 
+            Console.Write("Please choose member for deletion by number only - ");
+            try {
+                // Checking to see if selected user has any borrowed tools.
+                if (members.toArray()[int.Parse(Console.ReadLine()) - 1].Tools.Length == 0)
+                {
+                    members.delete(members.toArray()[int.Parse(Console.ReadLine()) - 1]);
+                    Console.WriteLine("Success! See new list of members below.");
+                    printAllMembers(members);
+                } else {
+                    Console.WriteLine("That user currently has tools borrowed and cannot be deleted.");
+                    Console.WriteLine("Press enter to return to staff menu");
+                    Console.ReadKey();
+                }
+            } catch (Exception) {
+                Console.WriteLine("Not a valid choice.");
+                Console.WriteLine("Press enter to return to staff menu");
+                Console.ReadKey();
+            }
+        }
         public void displayBorrowingTools(Member aMember) {
             throw new NotImplementedException();
         }
@@ -136,14 +220,79 @@ namespace Assignment
 
         public string[] listTools(Member aMember)
         {
-            throw new NotImplementedException();
+            if (!printAllMembers(members))
+                return null;
+            Console.Write("Please choose member to see their borrowed tools - ");
+            try {
+                int memberIndex = int.Parse(Console.ReadLine()) - 1;
+                if (members.toArray()[memberIndex].Tools.Length == 0)
+                {
+                    Console.WriteLine("This member does not have any borrowed tools.");
+                    Console.WriteLine("Press enter to return to staff menu");
+                    Console.ReadKey();
+                    return null;
+                }
+                else
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        members.toArray()[0].addTool(new Tool(i.ToString(), 1));
+                    }
+                    for (int i = 0; i < members.toArray()[memberIndex].Tools.Length; i++)
+                    {
+                        Console.WriteLine(i + ": " + members.toArray()[memberIndex].Tools[i].ToString());
+                    }
+                    members.delete(members.toArray()[int.Parse(Console.ReadLine()) - 1]);
+                    Console.WriteLine("Success! See new list of members below.");
+                    printAllMembers(members);
+                    return null;
+                }
+
+            } catch (Exception) {
+                Console.WriteLine("Not a valid choice.");
+                Console.WriteLine("Press enter to return to staff menu");
+                Console.ReadKey();
+                return null;
+            }
         }
+    
 
         public void returnTool(Member aMember, Tool aTool)
         {
             throw new NotImplementedException();
         }
-
+        private bool printAllMembers(MemberCollection members)
+        {
+            if (members.Number > 0)
+            {
+                Console.WriteLine("Current Members");
+                Console.WriteLine("=========================");
+                for (int i = 0; i < members.Number; i++)
+                {
+                    Console.WriteLine("Member No. " + (i + 1));
+                    Console.WriteLine("FirstName:\t" + members.toArray()[i].FirstName);
+                    Console.WriteLine("LastName:\t" + members.toArray()[i].LastName);
+                    Console.WriteLine("ContactNumber:\t" + members.toArray()[i].ContactNumber);
+                    Console.WriteLine("-------------------------");
+                }
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("There are currently no registered members.");
+                Console.WriteLine("Press enter to return to staff menu.");
+                Console.ReadKey();
+                return false;
+            }
+        }
+        private int findToolIndex(Tool aTool, ToolCollection toolCollection) {
+            for (int i = 0; i < toolCollection.Number; i++) {
+                if (toolCollection.toArray()[i].Name == aTool.Name) {
+                    return i;
+                }
+            }
+            return -1;
+        }
         private ToolCollection determineToolCollection()
         {
             Console.WriteLine("Please select the Tool Category");
@@ -175,16 +324,14 @@ namespace Assignment
                     Console.WriteLine("0 - Cancel and return to main menu\n");
 
                     Console.Write("New Tool Type - ");
-                    try
-                    {
+                    try {
                         typeInput = int.Parse(Console.ReadLine());
                         if (typeInput == 0)
                             return null;
                         typeInput--;
                         return GardeningTools[typeInput];
                     }
-                    catch (FormatException)
-                    {
+                    catch (FormatException) {
                         Console.WriteLine("Please enter a valid menu opton as a number.");
                         return determineToolCollection();
                     }
@@ -383,6 +530,13 @@ namespace Assignment
                     return determineToolCollection();
             }
         }
+        private void printTool(Tool aTool) {
+            Console.WriteLine("Name:\t\t\t" + aTool.Name);
+            Console.WriteLine("Quantity:\t\t" + aTool.Quantity);
+            Console.WriteLine("Available Quantity:\t" + aTool.AvailableQuantity);
+            Console.WriteLine("No. Borrowings:\t\t" + aTool.NoBorrowings);
+            Console.WriteLine("-------------------------------------------");
+        }
         private bool printTools(ToolCollection toolCollection) {
             if (toolCollection.Number == 0)
             {
@@ -391,7 +545,7 @@ namespace Assignment
                 Console.ReadKey();
                 return false;
             }
-            Console.WriteLine("\nTools found in selected category and type:");
+            Console.WriteLine("\nTools in selected category type:");
             Console.WriteLine("===========================================");
             for (int i = 0; i < toolCollection.Number; i++)
             {
@@ -399,7 +553,7 @@ namespace Assignment
                 Console.WriteLine("Name:\t\t\t" + toolCollection.toArray()[i].Name);
                 Console.WriteLine("Quantity:\t\t" + toolCollection.toArray()[i].Quantity);
                 Console.WriteLine("Available Quantity:\t" + toolCollection.toArray()[i].AvailableQuantity);
-                Console.WriteLine("No. Borrowings:\t\t" + toolColtoolCollection.toArray()[i]lection.NoBorrowings);
+                Console.WriteLine("No. Borrowings:\t\t" + toolCollection.toArray()[i].NoBorrowings);
                 Console.WriteLine("-------------------------------------------");
             }
             return true;

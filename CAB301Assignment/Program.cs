@@ -14,8 +14,7 @@ namespace Assignment
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        //if (staffAuthentication())
-                        if (true)
+                        if (staffAuthentication())
                         {
                             bool staffLoggedIn = true;
                             while (staffLoggedIn)
@@ -74,7 +73,6 @@ namespace Assignment
                         }
                         break;
                     case "2":
-                       
                         if (memberAuthenticated(members)) {
                             bool memberLoggedIn = true;
                             while(memberLoggedIn) { 

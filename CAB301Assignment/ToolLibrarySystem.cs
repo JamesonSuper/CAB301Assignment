@@ -126,7 +126,6 @@ namespace Assignment
             Console.ReadKey();
         }
         public void borrowTool(Member aMember, Tool aTool) {
-            aMember = loggedInMember;
             printAllMembers(members);
             determineToolCollection();
         }
@@ -192,7 +191,8 @@ namespace Assignment
         }
         public void displayTopTHree()
         {
-            throw new NotImplementedException();
+            heapSort();
+
         }
         public string[] listTools(Member aMember)
         {
@@ -542,10 +542,12 @@ namespace Assignment
             }
             return true;
         }
-        private void populateData()
+        /// <summary>
+        /// Sort by No.Borrowings on toolcollections
+        /// </summary>
+        private void heapSort()
         {
-            GardeningTools[0].add(new Tool("Ass"));
-
+        //https://www.geeksforgeeks.org/heap-sort/
         }
     }
 }

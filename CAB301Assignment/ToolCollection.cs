@@ -34,9 +34,7 @@ namespace Assignment
         public bool search(Tool aTool) {
             for (int i = 0; i < Number; i++) {
                 if (collection[i].Name == aTool.Name)
-                {
                     return true;
-                }
             }
             return false;
         }

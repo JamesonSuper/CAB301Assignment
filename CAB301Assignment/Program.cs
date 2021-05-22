@@ -8,6 +8,11 @@ namespace Assignment
         {
             MemberCollection members = new MemberCollection();
             ToolLibrarySystem library = new ToolLibrarySystem();
+            
+            library.add(new Member("James", "Scott", "0431024427", "1234"));
+            members.add(new Member("James", "Scott", "0431024427", "1234"));
+            library.add(new Tool("CBR500R"));
+
             while (true)
             {
                 drawMainMenu();
@@ -73,7 +78,8 @@ namespace Assignment
                         }
                         break;
                     case "2":
-                        if (memberAuthenticated(members)) {
+                        Member loggedInUser = memberAuthenticated(members);
+                        if (loggedInUser != null) {
                             bool memberLoggedIn = true;
                             while(memberLoggedIn) { 
                                 drawMemberMenu();
@@ -86,16 +92,19 @@ namespace Assignment
                                         break;
                                     case "2":
                                         // Borrow Tool from the library
-                                        library.borrowTool(null, null);
+                                        library.borrowTool(loggedInUser, null);
                                         break;
                                     case "3":
                                         // Return Tool to the library
+                                        library.returnTool(loggedInUser, null);
                                         break;
                                     case "4":
                                         // List tools on loan
+                                        library.listTools(loggedInUser);
                                         break;
                                     case "5":
                                         // Most frequently borrowed
+                                        library.displayTopTHree();
                                         break;
                                     case "0":
                                         memberLoggedIn = false;
@@ -134,7 +143,7 @@ namespace Assignment
             Console.WriteLine("2. Member Operations");
             Console.WriteLine("0. Exit Application");
             Console.WriteLine("==================================");
-            Console.Write("Enter Option: ");
+            Console.Write("Enter Option - ");
         }
         static void drawStaffMenu()
         {
@@ -149,13 +158,13 @@ namespace Assignment
             Console.WriteLine("6. Show tools member has on loan");
             Console.WriteLine("0. Return to main menu");
             Console.WriteLine("========================================");
-            Console.Write("Enter Option: ");
+            Console.Write("Enter Option - ");
         }
         static bool staffAuthentication() {
             Console.Clear();
-            Console.Write("Enter staff login: ");
+            Console.Write("Enter staff login - ");
             string username = Console.ReadLine();
-            Console.Write("Enter staff password: ");
+            Console.Write("Enter staff password - ");
             string password = Console.ReadLine();
             return (username == "staff" && password == "today123");
         }
@@ -234,10 +243,13 @@ namespace Assignment
             else if (PIN.Length == 4)
                 try {
                     int.Parse(PIN);
+                    int.Parse(ContactNumber);
                     library.add(new Member(FirstName, LastName, ContactNumber, PIN));
                     members.add(new Member(FirstName, LastName, ContactNumber, PIN));
+                    Console.WriteLine();
+                    badInputHandler("Success! New member created: " + FirstName + " " + LastName);
                 } catch (FormatException) {
-                    badInputHandler("PIN must be positive integers.");
+                    badInputHandler("Contact Number and PIN must be positive integers.");
                     return;
                 }
             else {
@@ -260,7 +272,13 @@ namespace Assignment
             {
                 Member memberToDelete = members.toArray()[int.Parse(Console.ReadLine()) - 1];
                 // Checking to see if selected user has any borrowed tools.
-                if (memberToDelete.Tools.Length == 0)
+                int toolCount = 0;
+                for (int i = 0; i < members.toArray().Length; i++)
+                {
+                    if (members.toArray()[i] != null)
+                        toolCount++;
+                }
+                if (toolCount == 0)
                 {
                     members.delete(memberToDelete);
                     library.delete(memberToDelete);
@@ -292,9 +310,9 @@ namespace Assignment
             Console.WriteLine("5. Display three most frequently rented tools");
             Console.WriteLine("0. Return to main menu");
             Console.WriteLine("=========================================");
-            Console.Write("Enter Option: ");
+            Console.Write("Enter Option - ");
         }
-        static bool memberAuthenticated(MemberCollection members) {
+        static Member memberAuthenticated(MemberCollection members) {
             Console.Clear();
             Console.WriteLine("   Tool Library System - Member Login Page   ");
             Console.WriteLine("=============================================");
@@ -306,14 +324,15 @@ namespace Assignment
             {
                 string usernameToCompare = members.toArray()[i].LastName + members.toArray()[i].FirstName;
                 if (usernameToCompare == username)
-                    if (members.toArray()[i].PIN == PIN)
-                        return true;
+                    if (members.toArray()[i].PIN == PIN) {
+                        return members.toArray()[i]; ;
+                    }
             }
-            return false;
+            return null;
         }
         static void badInputHandler(string message) {
             Console.WriteLine(message);
-            Console.WriteLine("Press enter to try again.");
+            Console.WriteLine("Please press enter.");
             Console.ReadKey();
         }
         static bool printAllMembers(MemberCollection members)

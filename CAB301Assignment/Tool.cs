@@ -32,18 +32,19 @@ namespace Assignment
             Borrowers.add(aMember);
             AvailableQuantity--;
             NoBorrowings++;
+            aMember.addTool(this);
         }
         public void deleteBorrower(Member aMember) {
             Borrowers.delete(aMember);
-            AvailableQuantity--;
-            NoBorrowings++;
+            AvailableQuantity++;
+            aMember.deleteTool(this);
         }
         public int CompareTo(Tool other) {
             if (other == null) return 1;
             return Name.CompareTo(other.Name);
         }
         public override string ToString() {
-            return Name;
+            return Name + " "  + Quantity + " "  + AvailableQuantity + " "  + NoBorrowings;
         }
     }
 }

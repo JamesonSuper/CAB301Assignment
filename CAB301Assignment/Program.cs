@@ -6,12 +6,13 @@ namespace Assignment
     {
         static void Main(string[] args)
         {
+            // To manage member login, I have used two Membercollections, one within 
+            // the tool library system, and another at the program.cs level.
             MemberCollection members = new MemberCollection();
             ToolLibrarySystem library = new ToolLibrarySystem();
             
             library.add(new Member("James", "Scott", "0431024427", "1234"));
             members.add(new Member("James", "Scott", "0431024427", "1234"));
-            library.add(new Tool("CBR500R"));
 
             while (true)
             {

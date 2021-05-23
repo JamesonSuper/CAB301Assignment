@@ -6,28 +6,16 @@ namespace Assignment
 {
 	public class BinarySearchNode
 	{
-		private Member member;
-		private BinarySearchNode lchild;
-		private BinarySearchNode rchild;
-		public BinarySearchNode(Member member) {
-			this.member = member;
-			lchild = null;
-			rchild = null;
+        public BinarySearchNode(Member member) {
+			this.Member = member;
+			LChild = null;
+			RChild = null;
 		}
 
-		public Member Member {
-			get { return member; }
-			set { member = value; }
-		}
+        public Member Member { get; set; }
 
-		public BinarySearchNode LChild {
-			get { return lchild; }
-			set { lchild = value; }
-		}
+        public BinarySearchNode LChild { get; set; }
 
-		public BinarySearchNode RChild {
-			get { return rchild; }
-			set { rchild = value; }
-		}
-	}
+        public BinarySearchNode RChild { get; set; }
+    }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Assignment
 {
+    /// <summary>
+    /// Class that plumbs together the other classes and exposes their functions.
+    /// </summary>
     public class ToolLibrarySystem : iToolLibrarySystem
     {
         private MemberCollection members;
@@ -66,7 +67,12 @@ namespace Assignment
                 AutomotiveTools[i] = new ToolCollection();
             }
         }
-        public void add(Tool aTool) // add a new tool to the system 
+
+        /// <summary>
+        /// Add a new Tool to the selected ToolCollection 
+        /// </summary>
+        /// <param name="aTool">Tool to be added into the selected ToolCollection.</param>
+        public void add(Tool aTool)
         {
             ToolCollection toolCollection = determineToolCollection();
             if (toolCollection != null)
@@ -98,7 +104,13 @@ namespace Assignment
                 Console.ReadKey();
             }
         }
-        public void add(Tool aTool, int quantity) //add new pieces of an existing tool to the system
+
+        /// <summary>
+        /// add new pieces of an existing tool to the system
+        /// </summary>
+        /// <param name="aTool">Unused, tool decision logic is made within the function.</param>
+        /// <param name="quantity">Unused, quantity is taken within function.</param>
+        public void add(Tool aTool, int quantity)
         {
             ToolCollection toolCollection = determineToolCollection();
             if (toolCollection != null)
@@ -133,15 +145,28 @@ namespace Assignment
                 }
             }
         }
+
+        /// <summary>
+        /// Adds the passed Member object to the class MemberCollection
+        /// </summary>
+        /// <param name="aMember">Member to be added.</param>
         public void add(Member aMember)
         {
             members.add(aMember);
         }
+
+        /// <summary>
+        /// Has the user choose a tool by filtering through the Categories/Subtypes
+        /// Then adds the tool to the members ToolCollection and the member to the 
+        /// Tools MemberCollection
+        /// </summary>
+        /// <param name="aMember">Member who is borrowing the tool</param>
+        /// <param name="aTool">Tool that is being borrowed</param>
         public void borrowTool(Member aMember, Tool aTool)
         {
             ToolCollection toolCollection = determineToolCollection();
             if (toolCollection != null)
-            {      // List all tools in this category
+            {
                 if (!printTools(toolCollection))
                     return;
                 Console.Write("Choose a tool to borrow - ");
@@ -150,7 +175,7 @@ namespace Assignment
                     int index = int.Parse(Console.ReadLine()) - 1;
                     if (index < 0 || index >= toolCollection.Number)
                         throw new FormatException("No tool at that index");
-                    // If the tool has available quantity
+                    
                     if (toolCollection.toArray()[index].AvailableQuantity > 0)
                     {
                         try
@@ -191,11 +216,24 @@ namespace Assignment
                 }
             }
         }
-        public void delete(Tool aTool) // DELETE TOOL FROM COLLECTION
-        {
 
+        /// <summary>
+        /// Delete the passed tool from a collection.
+        /// </summary>
+        /// <param name="aTool">Tool to be deleted</param>
+        public void delete(Tool aTool) 
+        {
+            ToolCollection toolCollection = determineToolCollection();
+            if (toolCollection == null) return;
+            toolCollection.delete(aTool);
         }
-        public void delete(Tool aTool, int quantity) // REDUCE TOOL QUANTITY
+
+        /// <summary>
+        /// REDUCE TOOL QUANTITY
+        /// </summary>
+        /// <param name="aTool">Tool to reduce quantity of</param>
+        /// <param name="quantity">Quantity to reduce</param>
+        public void delete(Tool aTool, int quantity)
         {
             // Prompts the user to choose a category and type, then returns that toolcollection
             ToolCollection toolCollection = determineToolCollection();
@@ -214,16 +252,16 @@ namespace Assignment
                 while (deleting)
                 {
                     Console.Write("\nPlease enter amount to be removed - ");
-                    int amountRemoving = int.Parse(Console.ReadLine());
-                    if (toolCollection.toArray()[index].Quantity - amountRemoving < 1)
+                    quantity = int.Parse(Console.ReadLine());
+                    if (toolCollection.toArray()[index].Quantity - quantity < 1)
                     {
                         Console.WriteLine("Tools cannot be completely removed from the library");
                         Console.WriteLine("Please ensure remaining quantity remains above 0.");
                     }
                     else
                     {
-                        toolCollection.toArray()[index].Quantity -= amountRemoving;
-                        toolCollection.toArray()[index].AvailableQuantity -= amountRemoving;
+                        toolCollection.toArray()[index].Quantity -= quantity;
+                        toolCollection.toArray()[index].AvailableQuantity -= quantity;
                         Console.WriteLine("\nSuccess, updated tool details below.");
                         printTool(toolCollection.toArray()[index]);
                         Console.WriteLine("Press enter to return to menu.");
@@ -243,68 +281,98 @@ namespace Assignment
                 return;
             }
         }
+
+        /// <summary>
+        /// Remove a member from the membercollection.
+        /// </summary>
+        /// <param name="aMember">Member to be deleted.</param>
         public void delete(Member aMember)
         {
             members.delete(aMember);
         }
+
+        /// <summary>
+        /// Function to display results of listTools.
+        /// </summary>
+        /// <param name="aMember">Member to search and return tools for</param>
         public void displayBorrowingTools(Member aMember)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Show tools a member has on loan");
+            Console.WriteLine("===============================");
+
+            Member memberToCheck = aMember;
+            // If the member passed in was null (Happens when triggered from staff menu)
+            // Then ask user to choose a user to see their borrowed tools.
+            if (aMember == null)
+            {
+                if (!printAllMembers(members)) return; // Member collection could be empty, if so, return null.
+                
+                Console.Write("Please choose member to see their borrowed tools - ");
+                try
+                {
+                    memberToCheck = members.toArray()[int.Parse(Console.ReadLine()) - 1];
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Not a valid choice.");
+                    Console.WriteLine("Press enter to return to menu");
+                    Console.ReadKey();
+                    return;
+                }
+            }
+            
+            string[] borrowedTools = listTools(memberToCheck);
+            if (borrowedTools == null) return;
+
+            Console.WriteLine("--------------------------------------");
+            for (int i = 0; i < borrowedTools.Length; i++)
+            {
+                Console.WriteLine((i + 1) + ":\t" + borrowedTools[i]);
+            }
+            Console.WriteLine("\nPress enter to return to menu");
+            Console.ReadKey();
         }
+
+        /// <summary>
+        /// Prompts user to choose a Category and Sub-Type, then displays 
+        /// all tools within that Sub-Type.
+        /// </summary>
+        /// <param name="aToolType">Unused. Category/Type decision logic is within ToolLibrarySystem.</param>
         public void displayTools(string aToolType)
         {
             printTools(determineToolCollection());
             Console.WriteLine("\nPress enter to return to main menu.");
             Console.ReadKey();
         }
+
+        /// <summary>
+        /// Displays the top three borrowed tools in the system.
+        /// </summary>
         public void displayTopTHree() {
-            //GardeningTools[0].add(new Tool("12"));
-            //ElectronicTools[0].add(new Tool("11"));
-            //ElectricityTools[0].add(new Tool("21"));
-            //FlooringTools[0].add(new Tool("310"));
-
-            //GardeningTools[0].toArray()[0].NoBorrowings = 12;
-            //ElectronicTools[0].toArray()[0].NoBorrowings = 11;
-            //ElectricityTools[0].toArray()[0].NoBorrowings = 21;
-            //FlooringTools[0].toArray()[0].NoBorrowings = 310;
-            
-            //GardeningTools[1].add(new Tool("1"));
-            //ElectronicTools[1].add(new Tool("123456"));
-            //ElectricityTools[1].add(new Tool("12345"));
-            //FlooringTools[1].add(new Tool("52"));
-
-            //GardeningTools[1].toArray()[0].NoBorrowings = 1;
-            //ElectronicTools[1].toArray()[0].NoBorrowings = 123456;
-            //ElectricityTools[1].toArray()[0].NoBorrowings = 12345;
-            //FlooringTools[1].toArray()[0].NoBorrowings = 52;
-
-            heapSort(getAllTools());
-
-            printArray(getAllTools());
+            Tool[] arr = getAllTools();
+            Tool[] topThree = new Tool[3];
+            heapSort(arr);
+            for (int i = 0; i < topThree.Length; i++)
+            {
+                if (arr[i] != null)
+                {
+                    topThree[i] = arr[i];
+                }
+            }
+            printArray(topThree);
 
             Console.ReadKey();
             // heapSort(determineBorrowCounts());
         }
+
+        /// <summary>
+        /// Returns string[] of the provided Members Tools.
+        /// </summary>
+        /// <param name="aMember">Member to have their toolCollection printed</param>
+        /// <returns>String[] of the provided Members Tools</returns>
         public string[] listTools(Member aMember)
         {
-            Member memberToCheck = aMember;
-            // If the member passed in was null (Happens when option is select from staff menu)
-            // Then ask user to choose a user to see their borrowed tools.
-            if (aMember == null) {
-                if (!printAllMembers(members)) return null; // Member collection could be empty, if so, return null.
-                Console.Write("Please choose member to see their borrowed tools - ");
-                try
-                {
-                    memberToCheck = members.toArray()[int.Parse(Console.ReadLine()) - 1];
-                } catch (FormatException) {
-                    Console.WriteLine("Not a valid choice.");
-                    Console.WriteLine("Press enter to return to menu");
-                    Console.ReadKey();
-                    return null;
-                }
-            }
-            // Check selected members toolCollection length to see if they have any borrowed tools
-            if (memberToCheck.Tools.Length == 0)
+            if (aMember.Tools.Length == 0)
             {
                 Console.WriteLine("This member does not have any borrowed tools.");
                 Console.WriteLine("\nPress enter to return to menu");
@@ -313,26 +381,19 @@ namespace Assignment
             }
             else
             {
-                Console.WriteLine("\n");
-                Console.WriteLine(memberToCheck.ToString() + ": Borrowed Tools");
-                Console.WriteLine("--------------------------------------");
-                for (int i = 0; i < memberToCheck.Tools.Length; i++)
-                {
-                    Console.WriteLine((i+1) + ":\t" + memberToCheck.Tools[i]);
-                }
-                Console.WriteLine("\nPress enter to return to menu");
-                Console.ReadKey();
-                return null;
+                Console.WriteLine("\n" + aMember.ToString() + ": Borrowed Tools");
+                return aMember.Tools;
             }
         }
+
         /// <summary>
         /// Called from the Member menu when user selects Return tool.
         /// Has user choose a category/type, displays their borrowed tools
         /// User chooses tool to return, it is removed from the members ToolCollection
         /// And the tools quantities are updated
         /// </summary>
-        /// <param name="aMember"></param>
-        /// <param name="aTool"></param>
+        /// <param name="aMember">Member returning the tool</param>
+        /// <param name="aTool">Tool being returned</param>
         public void returnTool(Member aMember, Tool aTool)
         {
             Console.WriteLine("To return a tool, please select its category and type:");
@@ -375,6 +436,12 @@ namespace Assignment
                 Console.ReadLine();
             }
         }
+
+        /// <summary>
+        /// Writes to the console the members within the passed MemberCollection object.
+        /// </summary>
+        /// <param name="members">The MemberCollection object to be iterated over and printed.</param>
+        /// <returns>False if the passed MemberCollection contains no members.</returns>
         private bool printAllMembers(MemberCollection members)
         {
             if (members.Number > 0)
@@ -399,6 +466,14 @@ namespace Assignment
                 return false;
             }
         }
+
+        /// <summary>
+        /// Searches for the provided tool in the passed toolcollection
+        /// returns its index or -1 if it doesnt exist.
+        /// </summary>
+        /// <param name="aTool">The Tool to search for</param>
+        /// <param name="toolCollection">The Tool Collection to be searched</param>
+        /// <returns>The resulting index, or -1 if it isnt found</returns>
         private int findToolIndex(Tool aTool, ToolCollection toolCollection)
         {
             for (int i = 0; i < toolCollection.Number; i++)
@@ -408,6 +483,212 @@ namespace Assignment
             }
             return -1;
         }
+
+        /// <summary>
+        /// Utility function to print a Tool.
+        /// </summary>
+        /// <param name="aTool">The tool to be printed.</param>
+        private void printTool(Tool aTool)
+        {
+            Console.WriteLine("Name:\t\t\t" + aTool.Name);
+            Console.WriteLine("Quantity:\t\t" + aTool.Quantity);
+            Console.WriteLine("Available Quantity:\t" + aTool.AvailableQuantity);
+            Console.WriteLine("No. Borrowings:\t\t" + aTool.NoBorrowings);
+            Console.WriteLine("-------------------------------------------");
+        }
+
+        /// <summary>
+        /// Utility function to print all tools within a ToolCollection
+        /// </summary>
+        /// <param name="toolCollection">ToolCollection to be iterated through and printed.</param>
+        /// <returns>False if no tools exist in passed parameter.</returns>
+        private bool printTools(ToolCollection toolCollection)
+        {
+            if (toolCollection == null) return false;
+
+            else if (toolCollection.Number == 0)
+            {
+                Console.WriteLine("No tool exisits in that category type.");
+                Console.WriteLine("Press enter to return to menu.");
+                Console.ReadKey();
+                return false;
+            }
+            Console.WriteLine("\nTools in selected category type:");
+            Console.WriteLine("===========================================");
+            for (int i = 0; i < toolCollection.Number; i++)
+            {
+                printTool(toolCollection.toArray()[i]);
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Comparison based sorting technique using the Tools No.Borrwings member.
+        /// Modifies passed array to descending order.
+        /// </summary>
+        /// <param name="allTools">Array to be sorted</param>
+        public void heapSort(Tool[] allTools)
+        {
+            int n = allTools.Length;
+
+            // Build heap
+            for (int i = n / 2 - 1; i >= 0; i--)
+                heapify(allTools, n, i);
+
+            // One by one extract an element from heap
+            for (int i = n - 1; i >= 0; i--)
+            {
+                // Move current root to end
+                Tool temp = allTools[0];
+                allTools[0] = allTools[i];
+                allTools[i] = temp;
+
+                heapify(allTools, i, 0);
+            }
+        }
+
+        /// <summary>
+        /// To heapify a subtree
+        /// </summary>
+        /// <param name="arr">The Subtree to be rooted</param>
+        /// <param name="heapSize">The size of the heap</param>
+        /// <param name="rootNode">The rooted node</param>
+        void heapify(Tool[] arr, int heapSize, int rootNode)
+        {
+            int smallest = rootNode;
+            int l = 2 * rootNode + 1;
+            int r = 2 * rootNode + 2;
+            // If left child is smaller than root
+            if (l < heapSize && arr[l].NoBorrowings < arr[smallest].NoBorrowings)
+                smallest = l;
+            // If right child is smaller than the largest so far
+            if (r < heapSize && arr[r].NoBorrowings < arr[smallest].NoBorrowings)
+                smallest = r;
+            if (smallest != rootNode)
+            {
+                Tool swap = arr[rootNode];
+                arr[rootNode] = arr[smallest];
+                arr[smallest] = swap;
+                // Recursively heapify the affected sub-tree
+                heapify(arr, heapSize, smallest);
+            }
+        }
+
+        /// <summary>
+        /// A utility function to print a Tool array
+        /// </summary>
+        /// <param name="arr">Tool array to be printed.</param>
+        private void printArray(Tool[] arr)
+        {
+            for (int i = 0; i < arr.Length; ++i)
+                printTool(arr[i]);
+        }
+
+        /// <summary>
+        /// Takes in a ToolCollection[] and returns in a Tool[] every Tool 
+        /// within each ToolCollection element of the array.
+        /// </summary>
+        /// <param name="category">ToolCollection[] to be returned as Tool[]</param>
+        /// <returns></returns>
+        private Tool[] getAllToolsInCategory(ToolCollection[] category)
+        {
+            int totalTool = 0;
+            for (int k = 0; k < category.Length; k++) {
+                totalTool += category[k].Number;
+            }
+            Tool[] categoryTools = new Tool[totalTool];
+            int index = 0;
+            for (int i = 0; i < category.Length; i++) {
+                Tool[] subCategoryTools = category[i].toArray();
+                for (int j = 0; j < subCategoryTools.Length; j++) {
+                    categoryTools[index] = subCategoryTools[j];
+                    index++;
+                }
+            }
+            return categoryTools;
+        }
+
+        /// <summary>
+        /// Returns a Tool[] containing every Tool in all of the Categories
+        /// </summary>
+        /// <returns></returns>
+        private Tool[] getAllTools()
+        {
+            Tool[] gardeningTools = getAllToolsInCategory(GardeningTools);
+            Tool[] flooringTools = getAllToolsInCategory(FlooringTools);
+            Tool[] fencingTools = getAllToolsInCategory(FencingTools);
+            Tool[] measuringTools = getAllToolsInCategory(MeasuringTools);
+            Tool[] cleaningTools = getAllToolsInCategory(CleaningTools);
+            Tool[] paintingTools = getAllToolsInCategory(PaintingTools);
+            Tool[] electronicTools = getAllToolsInCategory(ElectronicTools);
+            Tool[] electricityTools = getAllToolsInCategory(ElectricityTools);
+            Tool[] automotiveTools = getAllToolsInCategory(AutomotiveTools);
+
+            int allToolsCount = gardeningTools.Length;
+            allToolsCount += flooringTools.Length;
+            allToolsCount += fencingTools.Length;
+            allToolsCount += measuringTools.Length;
+            allToolsCount += cleaningTools.Length;
+            allToolsCount += paintingTools.Length;
+            allToolsCount += electronicTools.Length;
+            allToolsCount += electricityTools.Length;
+            allToolsCount += automotiveTools.Length;
+
+            Tool[] allTools = new Tool[allToolsCount]; 
+            int index = 0;
+            for (int i = 0; i < gardeningTools.Length; i++)
+            {
+                allTools[index] = gardeningTools[i];
+                index++;
+            }
+            for (int i = 0; i < flooringTools.Length; i++)
+            {
+                allTools[index] = flooringTools[i];
+                index++;
+            }
+            for (int i = 0; i < fencingTools.Length; i++)
+            {
+                allTools[index] = fencingTools[i];
+                index++;
+            }
+            for (int i = 0; i < measuringTools.Length; i++)
+            {
+                allTools[index] = measuringTools[i];
+                index++;
+            }
+            for (int i = 0; i < cleaningTools.Length; i++)
+            {
+                allTools[index] = cleaningTools[i];
+                index++;
+            }
+            for (int i = 0; i < paintingTools.Length; i++)
+            {
+                allTools[index] = paintingTools[i];
+                index++;
+            }
+            for (int i = 0; i < electronicTools.Length; i++)
+            {
+                allTools[index] = electronicTools[i];
+                index++;
+            }
+            for (int i = 0; i < electricityTools.Length; i++)
+            {
+                allTools[index] = electricityTools[i];
+                index++;
+            }
+            for (int i = 0; i < automotiveTools.Length; i++)
+            {
+                allTools[index] = automotiveTools[i];
+                index++;
+            }
+            return allTools;
+        }
+
+        /// <summary>
+        /// Utility function to return a toolCollection of the users choice
+        /// by prompting the Categories and then the selected categories sub-types.
+        /// </summary>
+        /// <returns></returns>
         private ToolCollection determineToolCollection()
         {
             Console.WriteLine("\nPlease select the Tool Category");
@@ -645,202 +926,6 @@ namespace Assignment
                     Console.Clear();
                     return determineToolCollection();
             }
-        }
-        private void printTool(Tool aTool)
-        {
-            Console.WriteLine("Name:\t\t\t" + aTool.Name);
-            Console.WriteLine("Quantity:\t\t" + aTool.Quantity);
-            Console.WriteLine("Available Quantity:\t" + aTool.AvailableQuantity);
-            Console.WriteLine("No. Borrowings:\t\t" + aTool.NoBorrowings);
-            Console.WriteLine("-------------------------------------------");
-        }
-        private bool printTools(ToolCollection toolCollection)
-        {
-            // Sometimes toolCollection is null when returned from determineToolCollection.
-            if (toolCollection == null)
-                return false;
-            // Check if toolCollection contains any tools.
-            else if (toolCollection.Number == 0)
-            {
-                Console.WriteLine("No tool exisits in that category type.");
-                Console.WriteLine("Press enter to return to menu.");
-                Console.ReadKey();
-                return false;
-            }
-            Console.WriteLine("\nTools in selected category type:");
-            Console.WriteLine("===========================================");
-            for (int i = 0; i < toolCollection.Number; i++)
-            {
-                Console.WriteLine("Tool No:\t\t" + (i + 1));
-                Console.WriteLine("Name:\t\t\t" + toolCollection.toArray()[i].Name);
-                Console.WriteLine("Quantity:\t\t" + toolCollection.toArray()[i].Quantity);
-                Console.WriteLine("Available Quantity:\t" + toolCollection.toArray()[i].AvailableQuantity);
-                Console.WriteLine("No. Borrowings:\t\t" + toolCollection.toArray()[i].NoBorrowings);
-                Console.WriteLine("-------------------------------------------");
-            }
-            return true;
-        }
-
-
-        // figure out a way to keep track of borrow counts and tool names simultaneously here.
-        // you may want to change the parameter back to int[] but my guess is you want to pass in tool so you have access to both borrow counts 
-        // as well as tool name.
-        //if you leave it as int[] you'll have to compare the largest 3 numbers produced by the sort to the ALL TOOLS array borrow counts in order to find their names.
-        // Young James, the choice is yours.
-        public void heapSort(Tool[] allTools)
-        {
-            int n = allTools.Length;
-
-            // Build heap (rearrange array)
-            for (int i = n / 2 - 1; i >= 0; i--)
-                heapify(allTools, n, i);
-
-            // One by one extract an element from heap
-            for (int i = n - 1; i > 0; i--)
-            {
-                // Move current root to end
-                Tool temp = allTools[0];
-                allTools[0] = allTools[i];
-                allTools[i] = temp;
-
-                // call max heapify on the reduced heap
-                heapify(allTools, i, 0);
-            }
-            Console.WriteLine(allTools[0]);
-            Console.WriteLine(allTools[1]);
-            Console.WriteLine(allTools[2]);
-            Console.WriteLine(allTools[3]);
-            Console.WriteLine(allTools[4]);
-            Console.WriteLine(allTools[5]);
-            Console.WriteLine(allTools[6]);
-            Console.WriteLine(allTools[7]);
-        }
-
-        // To heapify a subtree rooted with node i which is
-        // an index in arr[]. n is size of heap
-        void heapify(Tool[] arr, int heapSize, int rootNode)
-        {
-            int largest = rootNode; // Initialize largest as root
-            int l = 2 * rootNode + 1; // left = 2*i + 1
-            int r = 2 * rootNode + 2; // right = 2*i + 2
-
-            // If left child is larger than root
-            if (l < heapSize && arr[l].NoBorrowings > arr[largest].NoBorrowings)
-                largest = l;
-
-            // If right child is larger than largest so far
-            if (r < heapSize && arr[r].NoBorrowings > arr[largest].NoBorrowings)
-                largest = r;
-
-            // If largest is not root
-            if (largest != rootNode)
-            {
-                Tool swap = arr[rootNode];
-                arr[rootNode] = arr[largest];
-                arr[largest] = swap;
-
-                // Recursively heapify the affected sub-tree
-                heapify(arr, heapSize, largest);
-            }
-        }
-        /* A utility function to print array*/
-        static void printArray(Tool[] arr)
-        {
-            int n = arr.Length;
-            for (int i = 0; i < n; ++i)
-                Console.WriteLine(arr[i].Name + " " + arr[i].NoBorrowings);
-        }
-        private Tool[] getAllToolsInCategory(ToolCollection[] category)
-        {
-            int totalTool = 0;
-            for (int k = 0; k < category.Length; k++) {
-                totalTool += category[k].Number;
-            }
-            Tool[] categoryTools = new Tool[totalTool];
-            int index = 0;
-            for (int i = 0; i < category.Length; i++) {
-                Tool[] subCategoryTools = category[i].toArray();
-                for (int j = 0; j < subCategoryTools.Length; j++) {
-                    categoryTools[index] = subCategoryTools[j];
-                    index++;
-                }
-            }
-            return categoryTools;
-        }
-
-        // you can now iterate over allTools and retrive the numberOfBorrows for each tool. 
-        // this feels like it oculd be done a lot nicer.
-        // if you are allowed to use an ARRAY LIST instead, please do.
-        private Tool[] getAllTools()
-        {
-            Tool[] gardeningTools = getAllToolsInCategory(GardeningTools);
-            Tool[] flooringTools = getAllToolsInCategory(FlooringTools);
-            Tool[] fencingTools = getAllToolsInCategory(FencingTools);
-            Tool[] measuringTools = getAllToolsInCategory(MeasuringTools);
-            Tool[] cleaningTools = getAllToolsInCategory(CleaningTools);
-            Tool[] paintingTools = getAllToolsInCategory(PaintingTools);
-            Tool[] electronicTools = getAllToolsInCategory(ElectronicTools);
-            Tool[] electricityTools = getAllToolsInCategory(ElectricityTools);
-            Tool[] automotiveTools = getAllToolsInCategory(AutomotiveTools);
-
-            int allToolsCount = gardeningTools.Length;
-            allToolsCount += flooringTools.Length;
-            allToolsCount += fencingTools.Length;
-            allToolsCount += measuringTools.Length;
-            allToolsCount += cleaningTools.Length;
-            allToolsCount += paintingTools.Length;
-            allToolsCount += electronicTools.Length;
-            allToolsCount += electricityTools.Length;
-            allToolsCount += automotiveTools.Length;
-
-            Tool[] allTools = new Tool[allToolsCount]; 
-            int index = 0;
-            for (int i = 0; i < gardeningTools.Length; i++)
-            {
-                allTools[index] = gardeningTools[i];
-                index++;
-            }
-            for (int i = 0; i < flooringTools.Length; i++)
-            {
-                allTools[index] = flooringTools[i];
-                index++;
-            }
-            for (int i = 0; i < fencingTools.Length; i++)
-            {
-                allTools[index] = fencingTools[i];
-                index++;
-            }
-            for (int i = 0; i < measuringTools.Length; i++)
-            {
-                allTools[index] = measuringTools[i];
-                index++;
-            }
-            for (int i = 0; i < cleaningTools.Length; i++)
-            {
-                allTools[index] = cleaningTools[i];
-                index++;
-            }
-            for (int i = 0; i < paintingTools.Length; i++)
-            {
-                allTools[index] = paintingTools[i];
-                index++;
-            }
-            for (int i = 0; i < electronicTools.Length; i++)
-            {
-                allTools[index] = electronicTools[i];
-                index++;
-            }
-            for (int i = 0; i < electricityTools.Length; i++)
-            {
-                allTools[index] = electricityTools[i];
-                index++;
-            }
-            for (int i = 0; i < automotiveTools.Length; i++)
-            {
-                allTools[index] = automotiveTools[i];
-                index++;
-            }
-            return allTools;
         }
     }
 }

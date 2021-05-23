@@ -21,7 +21,6 @@ namespace Assignment
 
         void displayBorrowingTools(Member aMember); //given a member, display all the tools that the member are currently renting
 
-
         void displayTools(string aToolType); // display all the tools of a tool type selected by a member
 
         void borrowTool(Member aMember, Tool aTool); //a member borrows a tool from the tool library

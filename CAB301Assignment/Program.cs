@@ -57,14 +57,12 @@ namespace Assignment
                                         deleteMemberMenu(members, library);
                                         break;
                                     case "6":
-                                        Console.WriteLine("Search for member by contact number");
-                                        Console.WriteLine("===================================");
+                                        // Search for member contact number
                                         numberSearch(members);
                                         break;
                                     case "7":
-                                        Console.WriteLine("Show tools a member has on loan");
-                                        Console.WriteLine("===============================");
-                                        library.listTools(null);
+                                        // Show tools a member has on loan
+                                        library.displayBorrowingTools(null);
                                         break;
                                     case "0":
                                         staffLoggedIn = false;
@@ -106,7 +104,7 @@ namespace Assignment
                                         break;
                                     case "4":
                                         // List tools on loan
-                                        library.listTools(loggedInUser);
+                                        library.displayBorrowingTools(loggedInUser);
                                         break;
                                     case "5":
                                         // Most frequently borrowed
@@ -140,33 +138,38 @@ namespace Assignment
             }
         }
 
+        /// <summary>
+        /// Takes input and searches the passed MemberCollection object 
+        /// for a matching FirstName & LastName
+        /// </summary>
+        /// <param name="members">The Collection to be searched</param>
         private static void numberSearch(MemberCollection members)
         {
-            Console.Write("Please enter contact number to search - ");
-            try
+            Console.WriteLine("Search for a Members Contact Number by Name");
+            Console.WriteLine("===========================================");
+            Console.Write("Please enter FirstName to search - ");
+            string FirstNameSearch = Console.ReadLine();
+            Console.Write("Please enter LastName to search - ");
+            string LastNameSearch = Console.ReadLine();
+            Member[] arr = members.toArray();
+            for (int i = 0; i < arr.Length; i++)
             {
-                int searchTerm = int.Parse(Console.ReadLine());
-                Member[] arr = members.toArray();
-                for (int i = 0; i < arr.Length; i++)
+                if (arr[i].FirstName == FirstNameSearch && arr[i].LastName == LastNameSearch)
                 {
-                    if (arr[i].ContactNumber == searchTerm.ToString())
-                    {
-                        Console.WriteLine("Member found!");
-                        Console.WriteLine("Name: " + arr[i].ToString());
-                        Console.WriteLine("Contact Number: " + arr[i].ContactNumber);
-                        Console.WriteLine("Press enter to return to menu");
-                        Console.ReadKey();
-                        return;
-                    }
+                    Console.WriteLine("Member found!");
+                    Console.WriteLine("Name: " + arr[i].ToString());
+                    Console.WriteLine("Contact Number: " + arr[i].ContactNumber);
+                    Console.WriteLine("Press enter to return to menu");
+                    Console.ReadKey();
+                    return;
                 }
-                badInputHandler("No member found with provided search term.");
             }
-            catch (FormatException)
-            {
-                badInputHandler("Please only enter a valid contact number.");
-            }
+            badInputHandler("No member found with provided search terms.");
         }
 
+        /// <summary>
+        /// Utility function to draw main menu
+        /// </summary>
         static void drawMainMenu()
         {
             Console.Clear();
@@ -178,6 +181,10 @@ namespace Assignment
             Console.WriteLine("==================================");
             Console.Write("Enter Option - ");
         }
+
+        /// <summary>
+        /// Utility function to draw staff menu
+        /// </summary>
         static void drawStaffMenu()
         {
             Console.Clear();
@@ -194,6 +201,11 @@ namespace Assignment
             Console.WriteLine("========================================");
             Console.Write("Enter Option - ");
         }
+
+        /// <summary>
+        /// Prompts user for input and if matches saved staff credentials, allows login.
+        /// </summary>
+        /// <returns>True if passed username and pword match expected.</returns>
         static bool staffAuthentication() {
             Console.Clear();
             Console.Write("Enter staff login - ");
@@ -203,6 +215,11 @@ namespace Assignment
             return (username == "staff" && password == "today123");
         }
 
+        /// <summary>
+        /// Prompts user for inputs to create new Tool object
+        /// and returns that object.
+        /// </summary>
+        /// <returns>Created Tool object, or Null if input cancelled.</returns>
         static Tool addToolMenu() {
             Console.Clear();
             Console.WriteLine("Tool Library System - Add a new Tool");
@@ -217,24 +234,25 @@ namespace Assignment
                 return null;
             }
             Console.Write("Please enter the new Tools Quantity - ");
-            try {
-                int quantity = int.Parse(Console.ReadLine());
-                if (quantity < 1)
-                    throw new FormatException();
-                return new Tool(name, quantity);
-            } catch (FormatException) {
-                badInputHandler("ERROR: Input must be an positive integer");
+            int quantity = getNumericInput();
+            if (quantity == -1) 
                 return null;
+            else if (quantity == 0) { 
+                badInputHandler("Quantity cannot be 0.");
+                return null;
+            }
+            else { 
+                return new Tool(name, quantity);
+                badInputHandler("Success! Tool addded.");
             }
         }
 
-        static Tool deleteToolMenu() {
-            Console.Clear();
-            Console.WriteLine("Tool Library System - Delete an existing Tool");
-            Console.WriteLine("=============================================\n");
-            return new Tool("!Tool");
-        }
-        
+        /// <summary>
+        /// Takes user input for new Member and updates the passed MemberCollection object
+        /// and the MemberCollection inside the passed ToolLibrarySystem object
+        /// </summary>
+        /// <param name="members">MemberCollection object to updated</param>
+        /// <param name="library">Updates the ToolLibrarySystems inner MemberCollection object</param>
         static void addMemberMenu(MemberCollection members, ToolLibrarySystem library) {
             Console.Clear();
             Console.WriteLine("Tool Library System - Add a new member");
@@ -246,7 +264,7 @@ namespace Assignment
                 return;
             if (FirstName == "")
             {
-                badInputHandler("ERROR: First Name name must not be null.");
+                badInputHandler("ERROR: First Name cannot be null.");
                 return;
             }
 
@@ -256,7 +274,7 @@ namespace Assignment
                 return;
             if (LastName == "")
             {
-                badInputHandler("ERROR: Last Name name must not be null.");
+                badInputHandler("ERROR: Last Name cannot be null.");
                 return;
             }
 
@@ -291,6 +309,12 @@ namespace Assignment
                 return;
             }
         }
+
+        /// <summary>
+        /// Prompts the user to choose a member for deletion.
+        /// </summary>
+        /// <param name="members">MemberCollection to be searched and deleted from</param>
+        /// <param name="library">Passed to have its MemberCollection updated with the changes</param>
         static void deleteMemberMenu(MemberCollection members, ToolLibrarySystem library)
         {
             Console.Clear();
@@ -307,32 +331,35 @@ namespace Assignment
                 Member memberToDelete = members.toArray()[int.Parse(Console.ReadLine()) - 1];
                 // Checking to see if selected user has any borrowed tools.
                 int toolCount = 0;
-                for (int i = 0; i < members.toArray().Length; i++)
+                for (int i = 0; i < memberToDelete.Tools.Length; i++)
                 {
-                    if (members.toArray()[i] != null)
+                    if (memberToDelete.Tools[i] != null)
                         toolCount++;
                 }
                 if (toolCount == 0)
                 {
                     members.delete(memberToDelete);
                     library.delete(memberToDelete);
-                    Console.WriteLine("Success! See new list of members below.");
-                    printAllMembers(members);
+                    Console.WriteLine("\nSuccess! See new list of members below.");
+                    if (printAllMembers(members)) { 
+                        Console.WriteLine("Press enter to return to menu.");
+                        Console.ReadKey();
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("That user currently has tools borrowed and cannot be deleted.");
-                    Console.WriteLine("Press enter to return to staff menu");
-                    Console.ReadKey();
+                    badInputHandler("That user currently has tools borrowed and cannot be deleted.");
                 }
             }
             catch (Exception)
             {
-                Console.WriteLine("Not a valid choice.");
-                Console.WriteLine("Press enter to return to staff menu");
-                Console.ReadKey();
+                badInputHandler("Not a valid choice.");
             }
         }
+
+        /// <summary>
+        /// Utility function to print to the console each MemberMenu option.
+        /// </summary>
         static void drawMemberMenu() {
             Console.Clear();
             Console.WriteLine("       Welcome to the Tool Library       ");
@@ -346,11 +373,19 @@ namespace Assignment
             Console.WriteLine("=========================================");
             Console.Write("Enter Option - ");
         }
+
+        /// <summary>
+        /// Prompts user for login credentials.
+        /// If they match a registered member in the passed membercollection object
+        /// Return that member object
+        /// </summary>
+        /// <param name="members">MemberCollection object to be searched</param>
+        /// <returns>Member object if correct credentials supplied, null if not.</returns>
         static Member memberAuthenticated(MemberCollection members) {
             Console.Clear();
             Console.WriteLine("   Tool Library System - Member Login Page   ");
             Console.WriteLine("=============================================");
-            Console.Write("Please enter your member login ID - ");
+            Console.Write("Please enter your member login ID (LastnameFirstname) - ");
             string username = Console.ReadLine();
             Console.Write("Please enter your 4 digit PIN - ");
             string PIN = Console.ReadLine();
@@ -364,11 +399,39 @@ namespace Assignment
             }
             return null;
         }
+
+        /// <summary>
+        /// Takes user input and tries to parse it to type Int
+        /// </summary>
+        /// <returns>-1 if the input was not an int, otherwise the entered integer value.</returns>
+        private static int getNumericInput()
+        {
+            try
+            {
+                return Math.Abs(int.Parse(Console.ReadLine()));
+            }
+            catch (FormatException)
+            {
+                badInputHandler("Please enter a positive integer.");
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// Called to display the passed error message and return to menu instructions.
+        /// </summary>
+        /// <param name="message">Error message to display.</param>
         static void badInputHandler(string message) {
             Console.WriteLine(message);
             Console.WriteLine("Press enter to continue.");
             Console.ReadKey();
         }
+
+        /// <summary>
+        /// Prints all members in the passed MemberCollection object
+        /// </summary>
+        /// <param name="members">MemberCollection object to be printed</param>
+        /// <returns>False if the passed membercollection object is empty</returns>
         static bool printAllMembers(MemberCollection members)
         {
             if (members.Number > 0)

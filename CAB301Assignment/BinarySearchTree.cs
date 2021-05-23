@@ -11,11 +11,20 @@ namespace Assignment
 			root = null;
 		}
 
+		/// <summary>
+		/// Returns true if the root node is null
+		/// </summary>
+		/// <returns>True if the BST is empty</returns>
 		public bool IsEmpty()
 		{
 			return root == null;
 		}
 
+		/// <summary>
+		/// Search the BST for the passed item
+		/// </summary>
+		/// <param name="item">Item to search for</param>
+		/// <returns>True if found within the BST</returns>
 		public bool Search(Member item)
 		{
 			return Search(item, root);
@@ -37,6 +46,10 @@ namespace Assignment
 				return false;
 		}
 
+		/// <summary>
+		/// Inserts a new member into the BST
+		/// </summary>
+		/// <param name="member">Member to be inserted</param>
 		public void Insert(Member member)
 		{
 			if (root == null)
@@ -45,8 +58,6 @@ namespace Assignment
 				Insert(member, root);
 		}
 
-		// pre: ptr != null
-		// post: item is inserted to the binary search tree rooted at ptr
 		private void Insert(Member member, BinarySearchNode ptr)
 		{
 			if (member.CompareTo(ptr.Member) < 0)
@@ -65,10 +76,10 @@ namespace Assignment
 			}
 		}
 
-		// there are three cases to consider:
-		// 1. the node to be deleted is a leaf
-		// 2. the node to be deleted has only one child 
-		// 3. the node to be deleted has both left and right children
+		/// <summary>
+		/// Removes a member from the BST
+		/// </summary>
+		/// <param name="member">Member to be removed</param>
 		public void Delete(Member member)
 		{
 			// search for item and its parent
@@ -129,6 +140,11 @@ namespace Assignment
 
 			}
 		}
+
+		/// <summary>
+		/// Returns a Member[] of the BST In order traverse
+		/// </summary>
+		/// <returns>[] of ordered Members</returns>
 		public Member[] InOrderTraverse() {
 			Member[] a;
 			List<Member> l = new List<Member>();
@@ -150,6 +166,9 @@ namespace Assignment
 			}
 		}
 
+		/// <summary>
+		/// Clear the BST.
+		/// </summary>
 		public void Clear() {
 			root = null;
 		}

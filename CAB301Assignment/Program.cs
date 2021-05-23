@@ -57,6 +57,11 @@ namespace Assignment
                                         deleteMemberMenu(members, library);
                                         break;
                                     case "6":
+                                        Console.WriteLine("Search for member by contact number");
+                                        Console.WriteLine("===================================");
+                                        numberSearch(members);
+                                        break;
+                                    case "7":
                                         Console.WriteLine("Show tools a member has on loan");
                                         Console.WriteLine("===============================");
                                         library.listTools(null);
@@ -135,6 +140,33 @@ namespace Assignment
             }
         }
 
+        private static void numberSearch(MemberCollection members)
+        {
+            Console.Write("Please enter contact number to search - ");
+            try
+            {
+                int searchTerm = int.Parse(Console.ReadLine());
+                Member[] arr = members.toArray();
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    if (arr[i].ContactNumber == searchTerm.ToString())
+                    {
+                        Console.WriteLine("Member found!");
+                        Console.WriteLine("Name: " + arr[i].ToString());
+                        Console.WriteLine("Contact Number: " + arr[i].ContactNumber);
+                        Console.WriteLine("Press enter to return to menu");
+                        Console.ReadKey();
+                        return;
+                    }
+                }
+                badInputHandler("No member found with provided search term.");
+            }
+            catch (FormatException)
+            {
+                badInputHandler("Please only enter a valid contact number.");
+            }
+        }
+
         static void drawMainMenu()
         {
             Console.Clear();
@@ -156,7 +188,8 @@ namespace Assignment
             Console.WriteLine("3. Remove some pieces of an existing tool");
             Console.WriteLine("4. Register a new member");
             Console.WriteLine("5. Remove a member");
-            Console.WriteLine("6. Show tools member has on loan");
+            Console.WriteLine("6. Contact number search");
+            Console.WriteLine("7. Show tools member has on loan");
             Console.WriteLine("0. Return to main menu");
             Console.WriteLine("========================================");
             Console.Write("Enter Option - ");
@@ -333,7 +366,7 @@ namespace Assignment
         }
         static void badInputHandler(string message) {
             Console.WriteLine(message);
-            Console.WriteLine("Please press enter.");
+            Console.WriteLine("Press enter to continue.");
             Console.ReadKey();
         }
         static bool printAllMembers(MemberCollection members)

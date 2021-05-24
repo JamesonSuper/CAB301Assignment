@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\jscott\\CAB301 Assignment\\CAB301Assignment\\CAB301Assignment\\CAB301Assignment.csproj": {}
+    "C:\\jscott\\CAB301Assignment\\CAB301Assignment\\CAB301Assignment.csproj": {}
   },
   "projects": {
-    "C:\\jscott\\CAB301 Assignment\\CAB301Assignment\\CAB301Assignment\\CAB301Assignment.csproj": {
+    "C:\\jscott\\CAB301Assignment\\CAB301Assignment\\CAB301Assignment.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\jscott\\CAB301 Assignment\\CAB301Assignment\\CAB301Assignment\\CAB301Assignment.csproj",
+        "projectUniqueName": "C:\\jscott\\CAB301Assignment\\CAB301Assignment\\CAB301Assignment.csproj",
         "projectName": "CAB301Assignment",
-        "projectPath": "C:\\jscott\\CAB301 Assignment\\CAB301Assignment\\CAB301Assignment\\CAB301Assignment.csproj",
-        "packagesPath": "C:\\Users\\James\\.nuget\\packages\\",
-        "outputPath": "C:\\jscott\\CAB301 Assignment\\CAB301Assignment\\CAB301Assignment\\obj\\",
+        "projectPath": "C:\\jscott\\CAB301Assignment\\CAB301Assignment\\CAB301Assignment.csproj",
+        "packagesPath": "C:\\Users\\jscott10\\.nuget\\packages\\",
+        "outputPath": "C:\\jscott\\CAB301Assignment\\CAB301Assignment\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\James\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jscott10\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +26,6 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
-            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -38,7 +37,6 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
           "imports": [
             "net461",
             "net462",
@@ -54,7 +52,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
         }
       }
     }

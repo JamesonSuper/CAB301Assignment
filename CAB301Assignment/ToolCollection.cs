@@ -10,7 +10,7 @@ namespace Assignment
         public int Number { get; private set; }
         public ToolCollection()
         {
-            collection = new Tool[30];
+            collection = new Tool[10000000];
             Number = 0;
         }
 

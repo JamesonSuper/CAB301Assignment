@@ -117,7 +117,7 @@ namespace Assignment
             {      // List all tools in this category
                 if (!printTools(toolCollection))
                     return;
-                Console.Write("Choose a tool to increase its quantity - ");
+                Console.Write("Choose a tool by its number to increase its quantity - ");
                 try
                 {
                     int index = int.Parse(Console.ReadLine()) - 1;
@@ -469,20 +469,21 @@ namespace Assignment
             Console.WriteLine("===========================================");
             for (int i = 0; i < toolCollection.Number; i++)
             {
+                Console.WriteLine("Number:\t\t\t" + (i + 1));
                 printTool(toolCollection.toArray()[i]);
             }
             return true;
         }
+
 
         /// <summary>
         /// Comparison based sorting technique using the Tools No.Borrwings member.
         /// Modifies passed array to descending order.
         /// </summary>
         /// <param name="allTools">Array to be sorted</param>
-        public void heapSort(Tool[] allTools)
+        private void heapSort(Tool[] allTools)
         {
             int n = allTools.Length;
-
             // Build heap
             for (int i = n / 2 - 1; i >= 0; i--)
                 heapify(allTools, n, i);
@@ -494,7 +495,6 @@ namespace Assignment
                 Tool temp = allTools[0];
                 allTools[0] = allTools[i];
                 allTools[i] = temp;
-
                 heapify(allTools, i, 0);
             }
         }
@@ -505,23 +505,23 @@ namespace Assignment
         /// <param name="arr">The Subtree to be rooted</param>
         /// <param name="heapSize">The size of the heap</param>
         /// <param name="rootNode">The rooted node</param>
-        void heapify(Tool[] arr, int heapSize, int rootNode)
+        private void heapify(Tool[] arr, int heapSize, int rootNode)
         {
             int smallest = rootNode;
             int l = 2 * rootNode + 1;
             int r = 2 * rootNode + 2;
-            // If left child is smaller than root
-            if (l < heapSize && arr[l].NoBorrowings < arr[smallest].NoBorrowings)
+
+            if (l < heapSize && arr[l].NoBorrowings < arr[smallest].NoBorrowings) 
                 smallest = l;
-            // If right child is smaller than the largest so far
-            if (r < heapSize && arr[r].NoBorrowings < arr[smallest].NoBorrowings)
+
+            if (r < heapSize && arr[r].NoBorrowings < arr[smallest].NoBorrowings) 
                 smallest = r;
+
             if (smallest != rootNode)
             {
                 Tool swap = arr[rootNode];
                 arr[rootNode] = arr[smallest];
                 arr[smallest] = swap;
-                // Recursively heapify the affected sub-tree
                 heapify(arr, heapSize, smallest);
             }
         }

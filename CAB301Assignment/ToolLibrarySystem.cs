@@ -248,26 +248,22 @@ namespace Assignment
                 int index = int.Parse(Console.ReadLine()) - 1;
                 if (index < 0 || index >= toolCollection.Number)
                     throw new FormatException("No tool at that index");
-                bool deleting = true;
-                while (deleting)
+                Console.Write("\nPlease enter amount to be removed - ");
+                quantity = int.Parse(Console.ReadLine());
+                if (toolCollection.toArray()[index].AvailableQuantity - quantity < 1)
                 {
-                    Console.Write("\nPlease enter amount to be removed - ");
-                    quantity = int.Parse(Console.ReadLine());
-                    if (toolCollection.toArray()[index].Quantity - quantity < 1)
-                    {
-                        Console.WriteLine("Tools cannot be completely removed from the library");
-                        Console.WriteLine("Please ensure remaining quantity remains above 0.");
-                    }
-                    else
-                    {
-                        toolCollection.toArray()[index].Quantity -= quantity;
-                        toolCollection.toArray()[index].AvailableQuantity -= quantity;
-                        Console.WriteLine("\nSuccess, updated tool details below.");
-                        printTool(toolCollection.toArray()[index]);
-                        Console.WriteLine("Press enter to return to menu.");
-                        Console.ReadKey();
-                        deleting = false;
-                    }
+                    Console.WriteLine("Tools cannot be completely removed from the library");
+                    Console.WriteLine("Please ensure remaining available quantity remains above 0.");
+
+                }
+                else
+                {
+                    toolCollection.toArray()[index].Quantity -= quantity;
+                    toolCollection.toArray()[index].AvailableQuantity -= quantity;
+                    Console.WriteLine("\nSuccess, updated tool details below.");
+                    printTool(toolCollection.toArray()[index]);
+                    Console.WriteLine("Press enter to return to menu.");
+                    Console.ReadKey();
                 }
             }
             catch (FormatException e)
@@ -299,29 +295,8 @@ namespace Assignment
         {
             Console.WriteLine("Show tools a member has on loan");
             Console.WriteLine("===============================");
-
-            Member memberToCheck = aMember;
-            // If the member passed in was null (Happens when triggered from staff menu)
-            // Then ask user to choose a user to see their borrowed tools.
-            if (aMember == null)
-            {
-                if (!printAllMembers(members)) return; // Member collection could be empty, if so, return null.
-                
-                Console.Write("Please choose member to see their borrowed tools - ");
-                try
-                {
-                    memberToCheck = members.toArray()[int.Parse(Console.ReadLine()) - 1];
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Not a valid choice.");
-                    Console.WriteLine("Press enter to return to menu");
-                    Console.ReadKey();
-                    return;
-                }
-            }
-            
-            string[] borrowedTools = listTools(memberToCheck);
+                        
+            string[] borrowedTools = listTools(aMember);
             if (borrowedTools == null) return;
 
             Console.WriteLine("--------------------------------------");
@@ -337,32 +312,36 @@ namespace Assignment
         /// Prompts user to choose a Category and Sub-Type, then displays 
         /// all tools within that Sub-Type.
         /// </summary>
-        /// <param name="aToolType">Unused. Category/Type decision logic is within ToolLibrarySystem.</param>
+        /// <param name="aToolType">Unused. Category/Type decision logic is 
+        /// within ToolLibrarySystem.</param>
         public void displayTools(string aToolType)
         {
-            printTools(determineToolCollection());
-            Console.WriteLine("\nPress enter to return to main menu.");
-            Console.ReadKey();
+            if (printTools(determineToolCollection())) { 
+                Console.WriteLine("Press enter to return to menu");
+                Console.ReadKey();
+            }
         }
 
         /// <summary>
         /// Displays the top three borrowed tools in the system.
         /// </summary>
         public void displayTopTHree() {
+            Console.WriteLine("The three most borrowed Tools:");
+            Console.WriteLine("==============================");
             Tool[] arr = getAllTools();
-            Tool[] topThree = new Tool[3];
+            Tool[] topThree;
             heapSort(arr);
+            if (arr.Length > 3)
+                topThree = new Tool[3];
+            else
+                topThree = new Tool[arr.Length];
+
             for (int i = 0; i < topThree.Length; i++)
             {
-                if (arr[i] != null)
-                {
                     topThree[i] = arr[i];
-                }
             }
             printArray(topThree);
-
             Console.ReadKey();
-            // heapSort(determineBorrowCounts());
         }
 
         /// <summary>
@@ -420,50 +399,23 @@ namespace Assignment
             try
             {
                 int selection = int.Parse(Console.ReadLine()) - 1;
-                for (int i = 0; i < toolCollection.toArray().Length; i++)
+                for (int i = 0; i < toolCollection.Number; i++)
                 {
                     if (toolCollection.toArray()[i].Name == aMember.Tools[selection])
+                    {
                         toolCollection.toArray()[i].deleteBorrower(aMember);
+                        Console.WriteLine("\nSuccess, tool removed.");
+                        Console.WriteLine("Press enter to return to menu.");
+                        Console.ReadLine();
+                        return;
+                    }
                 }
-                Console.WriteLine("\nSuccess, tool removed.");
-                Console.WriteLine("Press enter to return to menu.");
-                Console.ReadLine();
             }
             catch (Exception)
             {
                 Console.WriteLine("Please type in a tool's number to return it.");
                 Console.WriteLine("Press enter to return to the menu.");
                 Console.ReadLine();
-            }
-        }
-
-        /// <summary>
-        /// Writes to the console the members within the passed MemberCollection object.
-        /// </summary>
-        /// <param name="members">The MemberCollection object to be iterated over and printed.</param>
-        /// <returns>False if the passed MemberCollection contains no members.</returns>
-        private bool printAllMembers(MemberCollection members)
-        {
-            if (members.Number > 0)
-            {
-                Console.WriteLine("Current Members");
-                Console.WriteLine("=========================");
-                for (int i = 0; i < members.Number; i++)
-                {
-                    Console.WriteLine("Member No. " + (i + 1));
-                    Console.WriteLine("FirstName:\t" + members.toArray()[i].FirstName);
-                    Console.WriteLine("LastName:\t" + members.toArray()[i].LastName);
-                    Console.WriteLine("ContactNumber:\t" + members.toArray()[i].ContactNumber);
-                    Console.WriteLine("-------------------------");
-                }
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("There are currently no registered members.");
-                Console.WriteLine("Press enter to return to menu.");
-                Console.ReadKey();
-                return false;
             }
         }
 

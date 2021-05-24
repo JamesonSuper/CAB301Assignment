@@ -60,10 +60,6 @@ namespace Assignment
                                         // Search for member contact number
                                         numberSearch(members);
                                         break;
-                                    case "7":
-                                        // Show tools a member has on loan
-                                        library.displayBorrowingTools(null);
-                                        break;
                                     case "0":
                                         staffLoggedIn = false;
                                         break;
@@ -196,9 +192,26 @@ namespace Assignment
             Console.WriteLine("4. Register a new member");
             Console.WriteLine("5. Remove a member");
             Console.WriteLine("6. Contact number search");
-            Console.WriteLine("7. Show tools member has on loan");
             Console.WriteLine("0. Return to main menu");
             Console.WriteLine("========================================");
+            Console.Write("Enter Option - ");
+        }
+
+        /// <summary>
+        /// Utility function to print to the console each MemberMenu option.
+        /// </summary>
+        static void drawMemberMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("       Welcome to the Tool Library       ");
+            Console.WriteLine("===============Member Menu===============");
+            Console.WriteLine("1. Display all the tools of a tool type");
+            Console.WriteLine("2. Borrow a tool");
+            Console.WriteLine("3. Return a tool");
+            Console.WriteLine("4. List all the tools that I am renting");
+            Console.WriteLine("5. Display three most frequently rented tools");
+            Console.WriteLine("0. Return to main menu");
+            Console.WriteLine("=========================================");
             Console.Write("Enter Option - ");
         }
 
@@ -241,9 +254,8 @@ namespace Assignment
                 badInputHandler("Quantity cannot be 0.");
                 return null;
             }
-            else { 
+            else {
                 return new Tool(name, quantity);
-                badInputHandler("Success! Tool addded.");
             }
         }
 
@@ -355,23 +367,6 @@ namespace Assignment
             {
                 badInputHandler("Not a valid choice.");
             }
-        }
-
-        /// <summary>
-        /// Utility function to print to the console each MemberMenu option.
-        /// </summary>
-        static void drawMemberMenu() {
-            Console.Clear();
-            Console.WriteLine("       Welcome to the Tool Library       ");
-            Console.WriteLine("===============Member Menu===============");
-            Console.WriteLine("1. Display all the tools of a tool type");
-            Console.WriteLine("2. Borrow a tool");
-            Console.WriteLine("3. Return a tool");
-            Console.WriteLine("4. List all the tools that I am renting");
-            Console.WriteLine("5. Display three most frequently rented tools");
-            Console.WriteLine("0. Return to main menu");
-            Console.WriteLine("=========================================");
-            Console.Write("Enter Option - ");
         }
 
         /// <summary>
